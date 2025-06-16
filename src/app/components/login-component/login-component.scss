@@ -1,0 +1,60 @@
+#login-component {
+    background-color: #b0d48e;
+}
+
+.card-header {
+    background-color: #b0d48e;
+    color: #fff;
+}
+
+.form-group {
+    height: 50px;
+}
+
+.input-group {
+    height: 55px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+
+    input {
+        border: none;
+
+        &:focus {
+            box-shadow: none;
+            border-color: #80bdff;
+        }
+    }
+
+    &.error {
+        border-color: red;
+
+        input {
+            border-color: red;
+        }
+    }
+}
+
+.input-group-icon {
+    background-color: #b0d48e;
+    padding: 0 5px;
+    height: 50px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        width: 80%;
+        height: 80%;
+        object-fit: cover;
+    }
+}
+
+.error-message {
+    color: red;
+    font-size: 0.875rem;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}

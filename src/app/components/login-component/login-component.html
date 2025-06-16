@@ -1,0 +1,34 @@
+<div class="d-flex align-items-center justify-content-center vh-100" id="login-component">
+    <div class="card w-25 gap-3">
+        <div class="card-header">
+            <h3 class="card-title text-center">Login</h3>
+        </div>
+        <div class="card-body">
+            <form [formGroup]="userForm">
+                <div class="d-flex flex-column mb-3 gap-4 w-100 h-100">
+                    <div class="d-flex flex-column align-items-center form-group">
+                        <div class="d-flex align-items-center gap-2 w-100 input-group" [ngClass]="{'error': userForm.get('email')?.errors?.['email']}">
+                            <div class="input-group-icon">
+                                <img src="https://img.icons8.com/ios-glyphs/60/FFFFFF/new-post.png" alt="Email Icon">
+                            </div>
+                            <input type="email" formControlName="email" class="form-control"
+                                placeholder="Email">
+                        </div>
+                        <div class="error-message" *ngIf="userForm.get('email')?.errors?.['email']">Ingrese un correo válido</div>
+                    </div>
+                    <div class="d-flex flex-column align-items-center gap-1 form-group">
+                        <div class="d-flex align-items-center gap-2 w-100 input-group" [ngClass]="{'error': userForm.get('password')?.errors?.['minlength'] || (userForm.get('password')?.errors?.['required'] && userForm.get('password')?.touched)}">
+                            <div class="input-group-icon">
+                                <img src="https://img.icons8.com/ios-filled/50/FFFFFF/password.png" alt="Passowrd Icon">
+                            </div>
+                            <input type="password" formControlName="password" class="form-control" 
+                                placeholder="Password">
+                        </div>
+                        <div class="error-message" *ngIf="userForm.get('password')?.errors?.['required'] && userForm.get('password')?.touched">Ingrese una contraseña</div>
+                        <div class="error-message" *ngIf="userForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 8 caracteres</div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
