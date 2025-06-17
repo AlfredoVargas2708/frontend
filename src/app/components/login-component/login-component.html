@@ -63,12 +63,19 @@
                 <p class="text-muted mb-0">Ingresa tus datos para registrarte.</p>
             </div>
 
-            <form class="d-flex flex-column gap-3">
+            <form class="d-flex flex-column gap-3" [formGroup]="signUpForm">
                 <!-- Campos de registro (nombre, email, password, etc.) -->
-                <input class="form-control" type="email" placeholder="Correo electrónico">
-                <input class="form-control" type="password" placeholder="Contraseña">
+                <label for="email">Correo electrónico</label>
+                <input class="form-control" type="email" placeholder="Correo electrónico" formControlName="email">
+                <label for="password">Contraseña</label>
+                <input class="form-control" type="password" placeholder="Contraseña" formControlName="password">
+                <label for="role">Rol</label>
+                <select class="form-control" formControlName="role">
+                    <option value="Employee">Empleado</option>
+                    <option value="Admin">Administrador</option>
+                </select>
 
-                <button type="submit" class="btn btn-success w-100">Registrarse</button>
+                <button type="submit" class="btn btn-success w-100" (click)="signUp()">Registrarse</button>
 
                 <div class="text-center mt-3">
                     <span class="text-muted">¿Ya tienes cuenta?</span>

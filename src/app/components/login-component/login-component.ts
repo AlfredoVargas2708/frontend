@@ -23,6 +23,7 @@ export class LoginComponent {
   isFlipped: boolean = false;
 
   userForm: FormGroup
+  signUpForm: FormGroup
 
   @ViewChild('forgotEmailInput') forgotEmailInput!: ElementRef;
   
@@ -31,6 +32,11 @@ export class LoginComponent {
       email: [this.user.email, [Validators.required, Validators.email]],
       password: [this.user.password, [Validators.required, Validators.minLength(8)]],
     })
+    this.signUpForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      role: ['Employee', [Validators.required]],
+    });
   }
 
   sendEmailPasswordReset() {
@@ -38,8 +44,8 @@ export class LoginComponent {
     this.emailService.sendPasswordResetEmail(email).subscribe({
       next: () => {
         Swal.fire({
-          title: 'Email Sent',
-          text: 'Please check your email for password reset instructions.',
+          title: 'Correo Enviado',
+          text: 'Por favor, revisa tu correo electrónico para obtener instrucciones sobre cómo restablecer tu contraseña.',
           icon: 'success',
           showConfirmButton: false,
           toast: true,
@@ -64,10 +70,10 @@ export class LoginComponent {
     if(this.userForm.valid) {
       const userData = this.userForm.value;
       this.userService.login(userData).subscribe({
-        next: () => {
+        next: (response) => {
           Swal.fire({
-            title: 'Login Successful',
-            text: 'Welcome back!',
+            title: 'Login Completado',
+            text: '¡Bienvenido de nuevo!',
             icon: 'success',
             toast: true,
             position: 'top-end',
@@ -75,14 +81,18 @@ export class LoginComponent {
             timerProgressBar: true,
             showConfirmButton: false
           }).then(() => {
-            this.router.navigate(['/admin']);
+            if(response.user.role === 'Admin') {
+              this.router.navigate(['/admin']);
+            }else if(response.user.role === 'Employee') {
+              this.router.navigate(['/employee']);
+            }
           })
         },
         error: (error) => {
           console.error('Login error:', error);
           Swal.fire({
-            title: 'Login Failed',
-            text: 'Invalid email or password. Please try again.',
+            title: 'Login Fallido',
+            text: 'Correo electrónico o contraseña inválidos. Por favor, inténtalo de nuevo.',
             icon: 'error',
             showConfirmButton: true
           });
@@ -93,5 +103,32 @@ export class LoginComponent {
 
   changeView() {
     this.isFlipped = !this.isFlipped;
+    if(this.isFlipped) {
+      this.signUpForm.reset();
+    }else {
+      this.userForm.reset();
+    }
+  }
+
+  signUp() {
+    if(this.signUpForm.valid) {
+      const signUpData = this.signUpForm.value;
+      this.userService.signUp(signUpData).subscribe({
+        next: (response) => {
+          Swal.fire({
+            title: 'Registro Exitoso',
+            text: '¡Te has registrado con éxito!. Hemos enviado un correo electrónico de confirmación.',
+            icon: 'success',
+            toast: true,
+            position: 'top-end',
+            timer: 3000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          }).then(() => {
+            this.router.navigate(['/login']);
+          })
+        }
+      })
+    }
   }
 }

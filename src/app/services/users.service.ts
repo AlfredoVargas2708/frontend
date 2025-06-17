@@ -14,6 +14,10 @@ export class UsersService {
     return this.http.post(`${environment.apiUrl}/users/login`, body);
   }
 
+  signUp(body: any): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/users/signup`, body);
+  }
+
   resetPassword(body: any): Observable<any> {
     return this.http.post(`${environment.apiUrl}/users/reset-password`, body);
   }
