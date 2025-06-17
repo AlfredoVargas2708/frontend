@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular
 import { EmailsService } from '../../services/emails.service';
 import { UsersService } from '../../services/users.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login-component',
@@ -33,8 +34,17 @@ export class LoginComponent {
   sendEmailPasswordReset() {
     const email = this.forgotEmailInput.nativeElement.value;
     this.emailService.sendPasswordResetEmail(email).subscribe({
-      next: (response) => {
-        console.log('Password reset email sent successfully:', response);
+      next: () => {
+        Swal.fire({
+          title: 'Email Sent',
+          text: 'Please check your email for password reset instructions.',
+          icon: 'success',
+          showConfirmButton: false,
+          toast: true,
+          position: 'top-end',
+          timer: 5000,
+          timerProgressBar: true
+        });
       },
       error: (error) => {
         console.error('Error sending password reset email:', error);
@@ -47,7 +57,18 @@ export class LoginComponent {
       const userData = this.userForm.value;
       this.userService.login(userData).subscribe({
         next: (response) => {
-          this.router.navigate(['/admin']); // Navigate to the admin or another route after successful login
+          Swal.fire({
+            title: 'Login Successful',
+            text: 'Welcome back!',
+            icon: 'success',
+            toast: true,
+            position: 'top-end',
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          }).then(() => {
+            this.router.navigate(['/admin']);
+          })
         },
         error: (error) => {
           console.error('Login failed:', error);
