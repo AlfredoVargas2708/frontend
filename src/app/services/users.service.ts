@@ -10,6 +10,10 @@ export class UsersService {
 
   constructor(private http: HttpClient) { }
 
+  login(body: any): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/users/login`, body);
+  }
+
   resetPassword(body: any): Observable<any> {
     return this.http.post(`${environment.apiUrl}/users/reset-password`, body);
   }

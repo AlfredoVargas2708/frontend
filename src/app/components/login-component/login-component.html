@@ -45,7 +45,7 @@
                     data-bs-target="#forgotModal">¿Olvidaste tu contraseña?</a>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+            <button type="submit" class="btn btn-primary w-100" (click)="login()">Iniciar sesión</button>
 
             <div class="text-center mt-3">
                 <span class="text-muted">¿No tienes una cuenta?</span>
@@ -74,7 +74,7 @@
             </div>
             <div class="modal-footer border-0 d-flex justify-content-between">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" (click)="sendEmailPasswordReset()">Enviar enlace</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="sendEmailPasswordReset()">Enviar enlace</button>
             </div>
         </div>
     </div>
