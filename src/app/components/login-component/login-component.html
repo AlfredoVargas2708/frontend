@@ -1,61 +1,84 @@
 <div id="login-component" class="d-flex align-items-center justify-content-center vh-100">
-    <div class="card p-4 shadow-sm w-100" style="max-width: 420px;">
-        <div class="text-center mb-4">
-            <h2 class="fw-bold">Iniciar Sesión</h2>
-            <p class="text-muted mb-0">Ingresa tus credenciales para acceder a tu cuenta.</p>
+    <div class="card-wrapper" [class.flipped]="isFlipped">
+        <!-- Login Card -->
+        <div class="card face front p-4 shadow-sm w-100" style="max-width: 420px;">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Iniciar Sesión</h2>
+                <p class="text-muted mb-0">Ingresa tus credenciales para acceder a tu cuenta.</p>
+            </div>
+
+            <form [formGroup]="userForm" class="d-flex flex-column gap-3">
+                <div class="form-group">
+                    <label for="email" class="form-label">Correo electrónico</label>
+                    <div class="input-group" [ngClass]="{'error': userForm.get('email')?.errors?.['email']}">
+                        <span class="input-group-text bg-success-subtle border-end-0">
+                            <img src="https://img.icons8.com/ios-glyphs/60/FFFFFF/new-post.png" alt="Email Icon"
+                                style="width: 20px;">
+                        </span>
+                        <input type="email" id="email" formControlName="email" class="form-control border-start-0"
+                            placeholder="tucorreo@ejemplo.com" />
+                    </div>
+                    <div class="error-message" *ngIf="userForm.get('email')?.errors?.['email']">Ingrese un correo válido
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <div class="input-group"
+                        [ngClass]="{'error': userForm.get('password')?.errors?.['minlength'] || (userForm.get('password')?.errors?.['required'] && userForm.get('password')?.touched)}">
+                        <span class="input-group-text bg-success-subtle border-end-0">
+                            <img src="https://img.icons8.com/ios-filled/50/FFFFFF/password.png" alt="Password Icon"
+                                style="width: 20px;">
+                        </span>
+                        <input type="password" id="password" formControlName="password"
+                            class="form-control border-start-0" placeholder="••••••••" />
+                    </div>
+                    <div class="error-message"
+                        *ngIf="userForm.get('password')?.errors?.['required'] && userForm.get('password')?.touched">
+                        Ingrese una contraseña
+                    </div>
+                    <div class="error-message" *ngIf="userForm.get('password')?.errors?.['minlength']">
+                        La contraseña debe tener al menos 8 caracteres
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <a class="text-decoration-none text-primary small" data-bs-toggle="modal"
+                        data-bs-target="#forgotModal">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100" (click)="login()">Iniciar sesión</button>
+
+                <div class="text-center mt-3">
+                    <span class="text-muted">¿No tienes una cuenta?</span>
+                    <a class="text-primary fw-bold signup" (click)="changeView()">Regístrate</a>
+                </div>
+            </form>
         </div>
 
-        <form [formGroup]="userForm" class="d-flex flex-column gap-3">
-            <div class="form-group">
-                <label for="email" class="form-label">Correo electrónico</label>
-                <div class="input-group" [ngClass]="{'error': userForm.get('email')?.errors?.['email']}">
-                    <span class="input-group-text bg-success-subtle border-end-0">
-                        <img src="https://img.icons8.com/ios-glyphs/60/FFFFFF/new-post.png" alt="Email Icon"
-                            style="width: 20px;">
-                    </span>
-                    <input type="email" id="email" formControlName="email" class="form-control border-start-0"
-                        placeholder="tucorreo@ejemplo.com" />
-                </div>
-                <div class="error-message" *ngIf="userForm.get('email')?.errors?.['email']">Ingrese un correo válido
-                </div>
+        <!-- Register Card -->
+        <div class="card face back p-4 shadow-sm w-100" style="max-width: 420px;">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Crear Cuenta</h2>
+                <p class="text-muted mb-0">Ingresa tus datos para registrarte.</p>
             </div>
 
-            <div class="form-group">
-                <label for="password" class="form-label">Contraseña</label>
-                <div class="input-group"
-                    [ngClass]="{'error': userForm.get('password')?.errors?.['minlength'] || (userForm.get('password')?.errors?.['required'] && userForm.get('password')?.touched)}">
-                    <span class="input-group-text bg-success-subtle border-end-0">
-                        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/password.png" alt="Password Icon"
-                            style="width: 20px;">
-                    </span>
-                    <input type="password" id="password" formControlName="password" class="form-control border-start-0"
-                        placeholder="••••••••" />
-                </div>
-                <div class="error-message"
-                    *ngIf="userForm.get('password')?.errors?.['required'] && userForm.get('password')?.touched">
-                    Ingrese una contraseña
-                </div>
-                <div class="error-message" *ngIf="userForm.get('password')?.errors?.['minlength']">
-                    La contraseña debe tener al menos 8 caracteres
-                </div>
-            </div>
+            <form class="d-flex flex-column gap-3">
+                <!-- Campos de registro (nombre, email, password, etc.) -->
+                <input class="form-control" type="email" placeholder="Correo electrónico">
+                <input class="form-control" type="password" placeholder="Contraseña">
 
-            <div class="d-flex justify-content-end">
-                <a href="#" class="text-decoration-none text-primary small" data-bs-toggle="modal"
-                    data-bs-target="#forgotModal">¿Olvidaste tu contraseña?</a>
-            </div>
+                <button type="submit" class="btn btn-success w-100">Registrarse</button>
 
-            <button type="submit" class="btn btn-primary w-100" (click)="login()">Iniciar sesión</button>
-
-            <div class="text-center mt-3">
-                <span class="text-muted">¿No tienes una cuenta?</span>
-                <a href="#" class="text-primary fw-bold signup">Regístrate</a>
-            </div>
-        </form>
+                <div class="text-center mt-3">
+                    <span class="text-muted">¿Ya tienes cuenta?</span>
+                    <a class="text-primary fw-bold" (click)="changeView()">Iniciar sesión</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<!-- Modal -->
 <div class="modal fade" id="forgotModal" tabindex="-1" aria-labelledby="forgotModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 shadow">
@@ -74,8 +97,8 @@
             </div>
             <div class="modal-footer border-0 d-flex justify-content-between">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="sendEmailPasswordReset()">Enviar enlace</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                    (click)="sendEmailPasswordReset()">Enviar enlace</button>
             </div>
         </div>
     </div>
-</div>

@@ -20,6 +20,8 @@ export class LoginComponent {
     admin: false
   }
 
+  isFlipped: boolean = false;
+
   userForm: FormGroup
 
   @ViewChild('forgotEmailInput') forgotEmailInput!: ElementRef;
@@ -42,12 +44,18 @@ export class LoginComponent {
           showConfirmButton: false,
           toast: true,
           position: 'top-end',
-          timer: 5000,
+          timer: 3000,
           timerProgressBar: true
         });
       },
       error: (error) => {
-        console.error('Error sending password reset email:', error);
+        console.error('Error sending email:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'There was an error sending the email. Please try again.',
+          icon: 'error',
+          showConfirmButton: true
+        });
       }
     });
   }
@@ -56,14 +64,14 @@ export class LoginComponent {
     if(this.userForm.valid) {
       const userData = this.userForm.value;
       this.userService.login(userData).subscribe({
-        next: (response) => {
+        next: () => {
           Swal.fire({
             title: 'Login Successful',
             text: 'Welcome back!',
             icon: 'success',
             toast: true,
             position: 'top-end',
-            timer: 2000,
+            timer: 1000,
             timerProgressBar: true,
             showConfirmButton: false
           }).then(() => {
@@ -71,9 +79,19 @@ export class LoginComponent {
           })
         },
         error: (error) => {
-          console.error('Login failed:', error);
+          console.error('Login error:', error);
+          Swal.fire({
+            title: 'Login Failed',
+            text: 'Invalid email or password. Please try again.',
+            icon: 'error',
+            showConfirmButton: true
+          });
         }
       })
     }
+  }
+
+  changeView() {
+    this.isFlipped = !this.isFlipped;
   }
 }
