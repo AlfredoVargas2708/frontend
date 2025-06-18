@@ -1,38 +1,132 @@
-<div id="employee-component" class="container-fluid py-4">
-    <div class="card shadow rounded-4 px-4 py-3 mx-0">
-        <div class="card-header bg-light border-bottom">
-            <h2 class="mb-0">Nueva Venta</h2>
+<div id="employee-component"
+    class="container-fluid py-4 bg-gradient-primary min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="card shadow-lg border-0 rounded-4 w-100">
+
+        <!-- Encabezado -->
+        <div
+            class="card-header bg-white d-flex justify-content-between align-items-center rounded-top-4 border-bottom py-3 px-4">
+            <h2 class="mb-0 text-primary fw-bold">Nueva Venta Nº{{ cantidadVentas + 1 }}</h2>
+            <span class="text-muted fw-semibold">🗓️ {{ saleForm.get('date')?.value | date:'shortDate' }}</span>
         </div>
-        <div class="card-body">
-            <form [formGroup]="productForm" class="row g-3">
+
+        <!-- Cuerpo -->
+        <div class="card-body bg-light rounded-bottom-4 px-4 py-4">
+            <form [formGroup]="productForm" class="row g-4">
+
                 <!-- Código -->
-                <div class="col-12 col-md-3">
-                    <label #codeInput for="code" class="form-label">Código</label>
-                    <input id="code" class="form-control" formControlName="code" (input)="getProduct($event)" />
+                <div class="col-12 col-md-3 d-flex flex-column gap-2">
+                    <label for="code" class="form-label fw-semibold">Código</label>
+                    <input #codeInput id="code" class="form-control form-control-lg shadow-sm" formControlName="code"
+                        (input)="getProduct($event)" placeholder="Escanea o escribe el código" />
                 </div>
 
                 <!-- Producto -->
-                <div class="col-12 col-md-5">
-                    <label for="product" class="form-label">Producto</label>
-                    <input id="product" class="form-control" formControlName="product" />
+                <div class="col-12 col-md-5 d-flex flex-column gap-2">
+                    <label for="product" class="form-label fw-semibold">Producto</label>
+                    <input id="product" class="form-control form-control-lg shadow-sm" formControlName="product"
+                        placeholder="Nombre del producto" />
                 </div>
 
                 <!-- Precio -->
-                <div class="col-6 col-md-2">
-                    <label for="price" class="form-label">Precio</label>
-                    <input id="price" class="form-control" formControlName="price" type="number" />
+                <div class="col-6 col-md-2 d-flex flex-column gap-2">
+                    <label for="price" class="form-label fw-semibold">Precio</label>
+                    <input id="price" class="form-control form-control-lg shadow-sm" formControlName="price"
+                        type="number" placeholder="$0" />
                 </div>
 
                 <!-- Cantidad -->
-                <div class="col-6 col-md-2">
-                    <label for="cant" class="form-label">Cantidad</label>
-                    <input #cantInput id="cant" class="form-control" formControlName="cant" type="number"
-                        (input)="verificarCantidad($event)" />
+                <div class="col-6 col-md-2 d-flex flex-column gap-2">
+                    <label for="cant" class="form-label fw-semibold">Cantidad</label>
+                    <input #cantInput id="cant" class="form-control form-control-lg shadow-sm" formControlName="cant"
+                        type="number" (input)="verificarCantidad()" placeholder="0" />
                     <div class="text-danger small mt-1" *ngIf="productForm.hasError('cantidadDebeSerDecimal')">
                         Ingrese peso del producto.
                     </div>
                 </div>
+
             </form>
+        </div>
+
+        <div class="card-footer bg-light rounded-bottom-4 px-4 py-4">
+            <h2 class="mb-0 text-primary fw-bold">Productos</h2>
+            <div class="table-products mt-3">
+                <table class="table table-light table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Código</th>
+                            <th class="text-center">Producto</th>
+                            <th class="text-center">Precio</th>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-center">Subtotal</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let product of saleForm.get('products')?.value, let index = index">
+                            <td>{{ product.code }}</td>
+                            <td>{{ product.product }}</td>
+                            <td>{{ product.price | currency }}</td>
+                            <td>{{ product.cant }}</td>
+                            <td>{{ product.price * product.cant | currency }}</td>
+                            <td>
+                                <div class="d-flex align-items-center justify-content-center gap-3 w-100" role="group">
+                                    <button type="button" class="btn btn-danger"
+                                        (click)="eliminarProducto(index)">Eliminar</button>
+                                    <button type="button" class="btn btn-primary" (click)="editarProducto(index)"
+                                        data-bs-toggle="modal" data-bs-target="#editModal">
+                                        Editar</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Centrado y ancho grande -->
+        <div class="modal-content shadow rounded-4 border-0">
+
+            <!-- Encabezado -->
+            <div class="modal-header bg-primary text-white rounded-top-4">
+                <h5 class="modal-title fw-bold" id="editModalLabel">✏️ Editar Producto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Cerrar"></button>
+            </div>
+
+            <!-- Cuerpo -->
+            <div class="modal-body bg-light px-4 py-3">
+                <form [formGroup]="editProductForm" class="row g-3">
+                    <div class="col-md-6">
+                        <label for="code" class="form-label fw-semibold">Código</label>
+                        <input id="code" class="form-control" formControlName="code"
+                            placeholder="Código del producto" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="product" class="form-label fw-semibold">Nombre</label>
+                        <input id="product" class="form-control" formControlName="product"
+                            placeholder="Nombre del producto" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="price" class="form-label fw-semibold">Precio</label>
+                        <input id="price" class="form-control" type="number" formControlName="price"
+                            placeholder="$0.00" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="cant" class="form-label fw-semibold">Cantidad</label>
+                        <input id="cant" class="form-control" type="number" formControlName="cant" placeholder="0" />
+                    </div>
+                </form>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer bg-white border-top-0 rounded-bottom-4 px-4 py-3 d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal" (click)="guardarCambios()">💾 Guardar</button>
+            </div>
+
         </div>
     </div>
 </div>

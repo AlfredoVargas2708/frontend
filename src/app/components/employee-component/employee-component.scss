@@ -1,45 +1,31 @@
-#employee-component {
-  background: linear-gradient(to right, #eef2f3, #dff0d8);
-  min-height: 100vh;
-  padding-top: 2rem;
-
-  .card {
-    width: 100%;
-    max-width: 100%; // Asegura que no se limiten con contenedores previos
-    border-radius: 0;
-    padding: 1.5rem;
-  }
-
-  .card-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #dee2e6;
-
-    h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #495057;
-    }
-  }
-
-  label {
-    font-weight: 500;
-    color: #343a40;
-  }
-
-  input.form-control {
-    border-radius: 0.5rem;
-    transition: box-shadow 0.2s;
-  }
-
-  input.form-control:focus {
-    box-shadow: 0 0 0 3px rgba(80, 200, 120, 0.2);
-  }
-
-  .text-danger {
-    font-size: 0.875rem;
-  }
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
 }
 
+.card {
+  transition: all 0.3s ease-in-out;
+}
+
+input::placeholder {
+  color: #adb5bd;
+  font-style: italic;
+}
+
+.modal-content {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 p,
 h1,

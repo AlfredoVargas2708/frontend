@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray, For
 import { cantidadDecimalSiPesableValidator } from '../../validators/cantidadDecimal';
 import { ProductsService } from '../../services/products.service';
 import { filter, first, debounceTime } from 'rxjs/operators';
+import { SalesService } from '../../services/sales.service';
 
 @Component({
   selector: 'app-employee-component',
@@ -15,22 +16,38 @@ export class EmployeeComponent implements AfterViewInit {
 
   productForm: FormGroup;
   saleForm: FormGroup;
+  editProductForm: FormGroup;
+  cantidadVentas: number = 0;
 
   @ViewChild('codeInput') codeInput!: ElementRef<HTMLInputElement>;
   @ViewChild('cantInput') cantInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private fb: FormBuilder, private productService: ProductsService) {
+  constructor(private fb: FormBuilder, private productService: ProductsService, private salesService: SalesService) {
     this.productForm = this.fb.group({
       code: ['', Validators.required],
       product: ['', Validators.required],
-      price: [0, [Validators.required, Validators.min(0)]],
+      price: [null, [Validators.required, Validators.min(0)]],
       cant: [null, [Validators.required, Validators.min(0)]],
       pesable: [false],
     }, {
       validators: [cantidadDecimalSiPesableValidator]
     })
+    this.editProductForm = this.fb.group({
+      code: ['', Validators.required],
+      product: ['', Validators.required],
+      price: [null, [Validators.required, Validators.min(0)]],
+      cant: [null, [Validators.required, Validators.min(0)]],
+    })
+    this.salesService.getCantidadVentas().subscribe({
+      next: (cantidad) => {
+        this.cantidadVentas = cantidad;
+      },
+      error: (err) => {
+        console.error('Error fetching sales count:', err);
+      }
+    })
     this.saleForm = this.fb.group({
-      id: [null],
+      id: [this.cantidadVentas + 1],
       date: [new Date()],
       total: [0],
       products: this.fb.array([]) // Aquí puedes inicializar un FormArray si es necesario
@@ -61,31 +78,34 @@ export class EmployeeComponent implements AfterViewInit {
     })
   }
 
-  verificarCantidad(event: any) {
-    const cant = event.target.value;
+  verificarCantidad() {
+    const cant = this.cantInput.nativeElement.value;
     const esPesable = this.productForm.get('pesable')?.value;
 
     if (esPesable && cant.length === 4) {
-      this.productForm.patchValue({
-        cant: parseFloat(cant)
-      });
-      this.addProductToSale(); // Agrega automáticamente
+      this.productForm.patchValue({ cant: parseFloat(cant) });
+      this.addProductToSale(); // Agrega automáticamente si es pesable y largo === 4
     } else if (!esPesable) {
-      const cantidad = parseInt(cant, 10);
-      this.productForm.patchValue({
-        cant: cantidad
-      });
+      // Solo escucha input manual del usuario, no patchValue
+      const inputListener = () => { };
 
-      // Escucha el cambio para valores válidos y agrega
-      this.productForm.get('cant')?.valueChanges.pipe(
-        debounceTime(300),
-        filter(value => !isNaN(value) && value > 0),
-        first()
-      ).subscribe(() => {
-        this.addProductToSale(); // Agrega automáticamente
-      });
+      this.cantInput.nativeElement.addEventListener('input', inputListener);
+
+      // Aquí esperamos 500ms sin escribir
+      setTimeout(() => {
+        const cantidad = parseInt(this.cantInput.nativeElement.value, 10);
+        if (!isNaN(cantidad) && cantidad > 0) {
+          this.productForm.patchValue({ cant: cantidad });
+          setTimeout(() => {
+            this.addProductToSale(); // Agrega automáticamente si es no pesable y largo > 0
+            this.cantInput.nativeElement.removeEventListener('input', inputListener); // Limpia el listener
+            this.codeInput.nativeElement.focus(); // Regresa el foco al input de código
+          }, 500)
+        }
+      }, 500);
     }
   }
+
 
 
   addProductToSale() {
@@ -105,15 +125,13 @@ export class EmployeeComponent implements AfterViewInit {
     }));
 
     // Reinicia el productForm después de agregarlo
-    setTimeout(() => {
-      this.productForm.reset({
-        code: '',
-        product: '',
-        price: 0,
-        cant: 0,
-        pesable: false
-      });
-    }, 1000);
+    this.productForm.reset({
+      code: '',
+      product: '',
+      price: null,
+      cant: null,
+      pesable: false
+    });
 
     // Actualiza el total de la venta
     this.updateTotal();
@@ -129,6 +147,29 @@ export class EmployeeComponent implements AfterViewInit {
     });
 
     this.saleForm.patchValue({ total: total });
+  }
+
+  eliminarProducto(index: number) {
+    const productsArray = this.saleForm.get('products') as FormArray;
+    if (index >= 0 && index < productsArray.length) {
+      productsArray.removeAt(index);
+      this.updateTotal(); // Actualiza el total después de eliminar
+    }
+  }
+
+  editarProducto(index: number) {
+    console.log('Editar producto: ', this.saleForm.get('products')?.value[index]);
+    this.editProductForm.patchValue(this.saleForm.get('products')?.value[index]);
+  }
+
+  guardarCambios() {
+    const index = this.saleForm.get('products')?.value.findIndex((p: any) => p.code === this.editProductForm.get('code')?.value);
+    if( index !== -1) {
+      const productsArray = this.saleForm.get('products') as FormArray;
+      productsArray.at(index).patchValue(this.editProductForm.value);
+      this.updateTotal(); // Actualiza el total después de editar
+      this.editProductForm.reset();
+    }
   }
 
 }
