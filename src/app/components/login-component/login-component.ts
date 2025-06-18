@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { User } from '../../interfaces/user';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmailsService } from '../../services/emails.service';
 import { UsersService } from '../../services/users.service';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
   templateUrl: './login-component.html',
   styleUrl: './login-component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements AfterViewInit {
   user: User = {
     email: '',
     password: '',
@@ -26,7 +26,9 @@ export class LoginComponent {
   signUpForm: FormGroup
 
   @ViewChild('forgotEmailInput') forgotEmailInput!: ElementRef;
-  
+  @ViewChild('emailLogin') emailLogin!: ElementRef;
+  @ViewChild('emailSignUp') emailSignUp!: ElementRef;
+
   constructor(private fb: FormBuilder, private emailService: EmailsService, private userService: UsersService, private router: Router) {
     this.userForm = this.fb.group({
       email: [this.user.email, [Validators.required, Validators.email]],
@@ -37,6 +39,12 @@ export class LoginComponent {
       password: ['', [Validators.required, Validators.minLength(8)]],
       role: ['Employee', [Validators.required]],
     });
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.emailLogin.nativeElement.focus();
+    }, 1000)
   }
 
   sendEmailPasswordReset() {
@@ -67,7 +75,7 @@ export class LoginComponent {
   }
 
   login() {
-    if(this.userForm.valid) {
+    if (this.userForm.valid) {
       const userData = this.userForm.value;
       this.userService.login(userData).subscribe({
         next: (response) => {
@@ -81,9 +89,9 @@ export class LoginComponent {
             timerProgressBar: true,
             showConfirmButton: false
           }).then(() => {
-            if(response.user.role === 'Admin') {
+            if (response.user.role === 'Admin') {
               this.router.navigate(['/admin']);
-            }else if(response.user.role === 'Employee') {
+            } else if (response.user.role === 'Employee') {
               this.router.navigate(['/employee']);
             }
           })
@@ -103,15 +111,21 @@ export class LoginComponent {
 
   changeView() {
     this.isFlipped = !this.isFlipped;
-    if(this.isFlipped) {
+    if (this.isFlipped) {
       this.signUpForm.reset();
-    }else {
+      setTimeout(() => {
+        this.emailSignUp.nativeElement.focus();
+      }, 1000);
+    } else {
       this.userForm.reset();
+      setTimeout(() => {
+        this.emailLogin.nativeElement.focus();
+      }, 1000);
     }
   }
 
   signUp() {
-    if(this.signUpForm.valid) {
+    if (this.signUpForm.valid) {
       const signUpData = this.signUpForm.value;
       this.userService.signUp(signUpData).subscribe({
         next: (response) => {

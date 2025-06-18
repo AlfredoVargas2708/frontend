@@ -15,7 +15,7 @@
                             <img src="https://img.icons8.com/ios-glyphs/60/FFFFFF/new-post.png" alt="Email Icon"
                                 style="width: 20px;">
                         </span>
-                        <input type="email" id="email" formControlName="email" class="form-control border-start-0"
+                        <input #emailLogin type="email" id="email" formControlName="email" class="form-control border-start-0"
                             placeholder="tucorreo@ejemplo.com" />
                     </div>
                     <div class="error-message" *ngIf="userForm.get('email')?.errors?.['email']">Ingrese un correo válido
@@ -66,7 +66,7 @@
             <form class="d-flex flex-column gap-3" [formGroup]="signUpForm">
                 <!-- Campos de registro (nombre, email, password, etc.) -->
                 <label for="email">Correo electrónico</label>
-                <input class="form-control" type="email" placeholder="Correo electrónico" formControlName="email">
+                <input #emailSignUp class="form-control" type="email" placeholder="Correo electrónico" formControlName="email">
                 <label for="password">Contraseña</label>
                 <input class="form-control" type="password" placeholder="Contraseña" formControlName="password">
                 <label for="role">Rol</label>
