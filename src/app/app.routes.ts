@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { EmailExistsGuard } from './guards/email-exists.guard';
-import { EmailNotVerified } from './components/email-not-verified/email-not-verified';
 
 export const routes: Routes = [
     {
@@ -44,6 +43,5 @@ export const routes: Routes = [
         path: 'email-not-verified/:email',
         loadComponent: () => import('./components/email-not-verified/email-not-verified').then(m => m.EmailNotVerified),
         title: 'Email no verificado',
-        canActivate: [EmailExistsGuard]
     }
 ];
