@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { cantidadDecimalSiPesableValidator } from '../../validators/cantidadDecimal';
 import { ProductsService } from '../../services/products.service';
@@ -12,18 +12,20 @@ import { SalesService } from '../../services/sales.service';
   templateUrl: './employee-component.html',
   styleUrl: './employee-component.scss'
 })
-export class EmployeeComponent implements AfterViewInit {
+export class EmployeeComponent implements AfterViewInit, OnInit {
 
-  productForm: FormGroup;
-  saleForm: FormGroup;
-  editProductForm: FormGroup;
-  cantidadVentas: number = 0;
+  productForm!: FormGroup;
+  saleForm!: FormGroup;
+  editProductForm!: FormGroup;
+
+  products: any[] = []; // Aquí puedes almacenar los productos si es necesario
 
   @ViewChild('codeInput') codeInput!: ElementRef<HTMLInputElement>;
   @ViewChild('cantInput') cantInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private fb: FormBuilder, private productService: ProductsService, private salesService: SalesService) {
+  constructor(private fb: FormBuilder, private productService: ProductsService, private salesService: SalesService, private cdf: ChangeDetectorRef) {
     this.productForm = this.fb.group({
+      id: [null],
       code: ['', Validators.required],
       product: ['', Validators.required],
       price: [null, [Validators.required, Validators.min(0)]],
@@ -38,21 +40,23 @@ export class EmployeeComponent implements AfterViewInit {
       price: [null, [Validators.required, Validators.min(0)]],
       cant: [null, [Validators.required, Validators.min(0)]],
     })
+  }
+
+  ngOnInit() {
     this.salesService.getCantidadVentas().subscribe({
       next: (cantidad) => {
-        this.cantidadVentas = cantidad;
+        this.saleForm = this.fb.group({
+          id: [cantidad + 1],
+          date: [new Date()],
+          total: [0],
+        });
       },
       error: (err) => {
-        console.error('Error fetching sales count:', err);
+        console.error('Error al obtener cantidad de ventas', err);
       }
-    })
-    this.saleForm = this.fb.group({
-      id: [this.cantidadVentas + 1],
-      date: [new Date()],
-      total: [0],
-      products: this.fb.array([]) // Aquí puedes inicializar un FormArray si es necesario
-    })
+    });
   }
+
 
   ngAfterViewInit(): void {
     setTimeout(() => this.codeInput.nativeElement.focus(), 100);
@@ -63,6 +67,7 @@ export class EmployeeComponent implements AfterViewInit {
     this.productService.getProduct(code).subscribe({
       next: (data) => {
         this.productForm.patchValue({
+          id: data.id,
           code: data.product_code,
           product: data.product_name,
           price: data.product_price,
@@ -76,6 +81,19 @@ export class EmployeeComponent implements AfterViewInit {
         console.error('Error fetching product:', err);
       }
     })
+  }
+
+  getIdVenta(): Number {
+    let id: Number = 0;
+    this.salesService.getCantidadVentas().subscribe({
+      next: (cantidad) => {
+        id = cantidad + 1;
+      },
+      error: (err) => {
+        console.error('Error fetching sales count:', err);
+      }
+    })
+    return id;
   }
 
   verificarCantidad() {
@@ -114,18 +132,21 @@ export class EmployeeComponent implements AfterViewInit {
     // Evita agregar si el formulario es inválido
     if (this.productForm.invalid) return;
 
-    const productsArray = this.saleForm.get('products') as FormArray;
+    // Verifica si el producto ya existe en la venta
+    const existingProducts = this.products.find(p => p.code === product.code);
 
-    productsArray.push(this.fb.group({
-      code: [product.code],
-      product: [product.product],
-      price: [product.price],
-      cant: [product.cant],
-      pesable: [product.pesable]
-    }));
+    if (existingProducts) {
+      // Si el producto ya existe, actualiza la cantidad
+      const index = this.products.findIndex(p => p.code === product.code);
+      this.products[index].cant += product.cant;
+    } else {
+      // Si no existe, lo agrega al array de productos
+      this.products.push(product);
+    }
 
     // Reinicia el productForm después de agregarlo
     this.productForm.reset({
+      id: null,
       code: '',
       product: '',
       price: null,
@@ -138,11 +159,9 @@ export class EmployeeComponent implements AfterViewInit {
   }
 
   updateTotal() {
-    const productsArray = this.saleForm.get('products') as FormArray;
     let total = 0;
 
-    productsArray.controls.forEach(control => {
-      const product = control.value;
+    this.products.forEach(product => {
       total += product.price * product.cant;
     });
 
@@ -150,26 +169,57 @@ export class EmployeeComponent implements AfterViewInit {
   }
 
   eliminarProducto(index: number) {
-    const productsArray = this.saleForm.get('products') as FormArray;
-    if (index >= 0 && index < productsArray.length) {
-      productsArray.removeAt(index);
+    if (index >= 0 && index < this.products.length) {
+      this.products.splice(index, 1);
       this.updateTotal(); // Actualiza el total después de eliminar
     }
   }
 
   editarProducto(index: number) {
-    console.log('Editar producto: ', this.saleForm.get('products')?.value[index]);
-    this.editProductForm.patchValue(this.saleForm.get('products')?.value[index]);
+    console.log('Editar producto: ', this.products[index]);
+    this.editProductForm.patchValue(this.products[index]);
   }
 
   guardarCambios() {
-    const index = this.saleForm.get('products')?.value.findIndex((p: any) => p.code === this.editProductForm.get('code')?.value);
-    if( index !== -1) {
-      const productsArray = this.saleForm.get('products') as FormArray;
-      productsArray.at(index).patchValue(this.editProductForm.value);
+    const index = this.products.findIndex((p: any) => p.code === this.editProductForm.get('code')?.value);
+    if (index !== -1) {
+      this.products[index] = this.editProductForm.value;
       this.updateTotal(); // Actualiza el total después de editar
       this.editProductForm.reset();
     }
   }
 
+  crearVenta() {
+    if (this.saleForm.invalid || this.products.length === 0) {
+      console.error('Formulario inválido o sin productos');
+      return;
+    }
+
+    this.salesService.getCantidadVentas().subscribe({
+      next: (cantidad) => {
+        const saleData = {
+          ...this.saleForm.value,
+          id: cantidad + 1,
+        };
+
+        this.salesService.createSale(saleData, this.products).subscribe({
+          next: () => {
+            this.saleForm.reset({
+              id: cantidad + 2, // para la siguiente venta
+              date: new Date(),
+              total: 0,
+            });
+            this.products = []; // Limpia la lista de productos
+            this.cdf.markForCheck(); // Asegura que la vista se actualice
+          },
+          error: (error) => {
+            console.error('Error al crear la venta:', error);
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error obteniendo cantidad de ventas:', err);
+      }
+    });
+  }
 }
