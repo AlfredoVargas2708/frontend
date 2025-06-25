@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { EmailExistsGuard } from './guards/email-exists.guard';
+import { Products } from './components/admin-componente/products/products';
 
 export const routes: Routes = [
     {
@@ -9,13 +10,35 @@ export const routes: Routes = [
     },
     {
         path: 'login',
-        loadComponent: () => import('./components/login-component/login-component').then(m => m.LoginComponent),
+        loadComponent: () => import('./components/login-components/login-component/login-component').then(m => m.LoginComponent),
         title: 'Inicio de sesión',
     },
     {
         path: 'admin',
         loadComponent: () => import('./components/admin-componente/admin-componente').then(m => m.AdminComponente),
         title: 'Administración',
+        children: [
+            {
+                path: '',
+                redirectTo: '',
+                pathMatch: 'full',
+            },
+            {
+                path: 'products',
+                loadComponent: () => import('./components/admin-componente/products/products').then(m => m.Products),
+                title: 'Productos',
+            },
+            {
+                path: 'sales',
+                loadComponent: () => import('./components/admin-componente/sales/sales').then(m => m.Sales),
+                title: 'Ventas',
+            },
+            {
+                path: 'config',
+                loadComponent: () => import('./components/admin-componente/config/config').then(m => m.Config),
+                title: 'Configuración',
+            }
+        ]
     },
     {
         path: 'restore-password',
@@ -30,18 +53,18 @@ export const routes: Routes = [
     },
     {
         path: 'confirm-email/:email',
-        loadComponent: () => import('./components/confirmation-component/confirmation-component').then(m => m.ConfirmationComponent),
+        loadComponent: () => import('./components/login-components/confirmation-component/confirmation-component').then(m => m.ConfirmationComponent),
         title: 'Confirmación',
         canActivate: [EmailExistsGuard]
     },
     {
         path: 'email-not-found',
-        loadComponent: () => import('./components/email-not-found/email-not-found').then(m => m.EmailNotFound),
+        loadComponent: () => import('./components/login-components/email-not-found/email-not-found').then(m => m.EmailNotFound),
         title: 'Email no encontrado'
     },
     {
         path: 'email-not-verified/:email',
-        loadComponent: () => import('./components/email-not-verified/email-not-verified').then(m => m.EmailNotVerified),
+        loadComponent: () => import('./components/login-components/email-not-verified/email-not-verified').then(m => m.EmailNotVerified),
         title: 'Email no verificado',
     }
 ];

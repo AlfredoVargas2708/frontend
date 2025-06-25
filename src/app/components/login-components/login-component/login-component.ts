@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { User } from '../../interfaces/user';
+import { User } from '../../../interfaces/user';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EmailsService } from '../../services/emails.service';
-import { UsersService } from '../../services/users.service';
+import { EmailsService } from '../../../services/emails.service';
+import { UsersService } from '../../../services/users.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
