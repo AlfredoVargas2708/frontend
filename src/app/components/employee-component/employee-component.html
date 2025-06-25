@@ -1,7 +1,25 @@
-<div id="employee-component"
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">🧾 Punto de Venta</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold" href="/login">Cerrar Sesión</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Contenido principal -->
+<main id="employee-component"
     class="container-fluid py-4 bg-gradient-primary min-vh-100 d-flex align-items-center justify-content-center">
     <div class="card shadow-lg border-0 rounded-4 w-100">
-
         <!-- Encabezado -->
         <div
             class="card-header bg-white d-flex justify-content-between align-items-center rounded-top-4 border-bottom py-3 px-4">
@@ -12,7 +30,6 @@
         <!-- Cuerpo -->
         <div class="card-body bg-light rounded-bottom-4 px-4 py-4">
             <form [formGroup]="productForm" class="row g-4">
-
                 <!-- Código -->
                 <div class="col-12 col-md-3 d-flex flex-column gap-2">
                     <label for="code" class="form-label fw-semibold">Código</label>
@@ -43,10 +60,10 @@
                         Ingrese peso del producto.
                     </div>
                 </div>
-
             </form>
         </div>
 
+        <!-- Tabla productos y total -->
         <div class="card-footer bg-light rounded-bottom-4 px-4 py-4">
             <h2 class="mb-0 text-primary fw-bold">Productos</h2>
             <div class="table-products mt-3">
@@ -90,20 +107,17 @@
             </div>
         </div>
     </div>
-</div>
+</main>
 
+<!-- Modal Editar Producto -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Centrado y ancho grande -->
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content shadow rounded-4 border-0">
-
-            <!-- Encabezado -->
             <div class="modal-header bg-primary text-white rounded-top-4">
                 <h5 class="modal-title fw-bold" id="editModalLabel">✏️ Editar Producto</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Cerrar"></button>
             </div>
-
-            <!-- Cuerpo -->
             <div class="modal-body bg-light px-4 py-3">
                 <form [formGroup]="editProductForm" class="row g-3">
                     <div class="col-md-6">
@@ -127,13 +141,11 @@
                     </div>
                 </form>
             </div>
-
-            <!-- Footer -->
             <div class="modal-footer bg-white border-top-0 rounded-bottom-4 px-4 py-3 d-flex justify-content-between">
                 <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal" (click)="guardarCambios()">💾 Guardar</button>
+                <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal" (click)="guardarCambios()">💾
+                    Guardar</button>
             </div>
-
         </div>
     </div>
 </div>
