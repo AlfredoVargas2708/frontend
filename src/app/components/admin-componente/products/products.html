@@ -119,102 +119,228 @@
     </div>
 
     <!-- Offcanvas for Editing Product -->
-
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEditProduct"
         aria-labelledby="offcanvasEditProductLabel" data-bs-backdrop="true">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasEditProductLabel">Editar Producto</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <!-- Encabezado con estilo mejorado -->
+        <div class="offcanvas-header bg-primary text-white">
+            <div>
+                <h5 class="offcanvas-title mb-1" id="offcanvasEditProductLabel">
+                    <i class="bi bi-pencil-square me-2"></i>Editar Producto
+                </h5>
+                <p class="small mb-0 opacity-75">Actualiza la información del producto</p>
+            </div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body">
-            <form [formGroup]="editProductForm">
-                <!-- Código del Producto -->
-                <div class="mb-3">
-                    <label for="productCode" class="form-label">Código del Producto</label>
-                    <input type="text" class="form-control" id="productCode" formControlName="productCode"
-                        placeholder="Ej: PROD-001" required>
+
+        <!-- Cuerpo del offcanvas -->
+        <div class="offcanvas-body p-4">
+            <form [formGroup]="editProductForm" class="needs-validation" novalidate>
+                <!-- Sección de información básica -->
+                <div class="mb-4 border-bottom pb-3">
+                    <h6 class="fw-bold text-primary mb-3">
+                        <i class="bi bi-info-circle me-2"></i>Información Básica
+                    </h6>
+
+                    <!-- Código del Producto -->
+                    <div class="mb-3">
+                        <label for="productCode" class="form-label fw-semibold">
+                            <i class="bi bi-upc-scan me-2"></i>Código del Producto
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="bi bi-tag"></i>
+                            </span>
+                            <input type="text" class="form-control shadow-sm" id="productCode"
+                                formControlName="productCode" placeholder="Ej: PROD-001" required>
+                        </div>
+                    </div>
+
+                    <!-- Nombre del Producto -->
+                    <div class="mb-3">
+                        <label for="productName" class="form-label fw-semibold">
+                            <i class="bi bi-card-text me-2"></i>Nombre del Producto
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="bi bi-box-seam"></i>
+                            </span>
+                            <input type="text" class="form-control shadow-sm" id="productName"
+                                formControlName="productName" placeholder="Ej: Laptop HP EliteBook" required>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Nombre del Producto -->
-                <div class="mb-3">
-                    <label for="productName" class="form-label">Nombre del Producto</label>
-                    <input type="text" class="form-control" id="productName" formControlName="productName"
-                        placeholder="Ej: Laptop HP EliteBook" required>
+                <!-- Sección de precio e imagen -->
+                <div class="row g-3 mb-4 border-bottom pb-3">
+                    <!-- Precio -->
+                    <div class="col-md-6">
+                        <label for="productPrice" class="form-label fw-semibold">
+                            <i class="bi bi-currency-dollar me-2"></i>Precio
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">CLP</span>
+                            <input type="number" class="form-control shadow-sm" id="productPrice"
+                                formControlName="productPrice" placeholder="0.00" required>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Precio -->
-                <div class="mb-3">
-                    <label for="productPrice" class="form-label">Precio</label>
-                    <input type="number" class="form-control" id="productPrice" formControlName="productPrice"
-                        placeholder="$0.00" step="0.01" required>
-                </div>
+                <!-- Sección multimedia -->
+                <div class="mb-4 border-bottom pb-3">
+                    <h6 class="fw-bold text-primary mb-3">
+                        <i class="bi bi-image me-2"></i>Multimedia
+                    </h6>
 
-                <!-- Imagen del Producto -->
-                <div class="mb-3">
-                    <label for="productImage" class="form-label">Imagen del Producto</label>
-                    <input type="url" class="form-control" id="productImage" formControlName="productImage"
-                        placeholder="https://ejemplo.com/imagen.jpg" required>
+                    <!-- Imagen del Producto -->
+                    <div class="mb-3">
+                        <label for="productImage" class="form-label fw-semibold">
+                            <i class="bi bi-image me-2"></i>URL de la Imagen
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="bi bi-link-45deg"></i>
+                            </span>
+                            <input type="url" class="form-control shadow-sm" id="productImage"
+                                formControlName="productImage" placeholder="https://ejemplo.com/imagen.jpg" required>
+                        </div>
+                        <!-- Vista previa de imagen -->
+                        <div class="mt-3 text-center">
+                            <img [src]="editProductForm.get('productImage')?.value || 'assets/img/placeholder-product.png'"
+                                class="img-thumbnail preview-image" alt="Vista previa"
+                                style="max-height: 150px; display: block; margin: 0 auto; border: 2px dashed #dee2e6;">
+                            <small class="text-muted d-block mt-1">Vista previa de la imagen</small>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Enlace del Producto -->
-                <div class="mb-3">
-                    <label for="productLink" class="form-label">Enlace del Producto</label>
-                    <input type="url" class="form-control" id="productLink" formControlName="productLink"
-                        placeholder="https://tienda.com/producto" required>
+                <div class="mb-4">
+                    <h6 class="fw-bold text-primary mb-3">
+                        <i class="bi bi-link me-2"></i>Enlace del Producto
+                    </h6>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light">
+                            <i class="bi bi-box-arrow-up-right"></i>
+                        </span>
+                        <input type="url" class="form-control shadow-sm" id="productLink" formControlName="productLink"
+                            placeholder="https://tienda.com/producto" required>
+                    </div>
+                    <small class="text-muted">Enlace completo a la página del producto</small>
                 </div>
             </form>
+        </div>
 
-            <div class="mt-4">
+        <!-- Footer con botones de acción -->
+        <div class="offcanvas-footer p-3 bg-light border-top">
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+                    <i class="bi bi-x-circle me-2"></i>Cancelar
+                </button>
                 <button type="button" class="btn btn-primary" (click)="updateProduct()"
-                    data-bs-dismiss="offcanvas">Guardar Cambios</button>
+                    [disabled]="!editProductForm.valid">
+                    <i class="bi bi-check-circle me-2"></i>Guardar Cambios
+                </button>
             </div>
         </div>
     </div>
 
-
     <!-- Products Grid -->
-    <div class="mb-4">
-        <ng-container *ngIf="products.length > 0">
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
-                <div class="col" *ngFor="let product of products">
-                    <div class="card h-100 product-card shadow-sm border-0">
-                        <img [src]="product.product_image" class="card-img-top p-3" alt="{{ product.product_name }}"
-                            style="height: 200px; object-fit: contain;">
-                        <div class="card-body d-flex flex-column justify-content-between gap-2">
-                            <h5 class="card-title text-wrap text-center">{{ product.product_name }}</h5>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span class="h5 text-primary">CLP {{ product.product_price | number:'1.0-0'
-                                        }}</span>
+    <div class="container-fluid mb-4">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="d-flex justify-content-start align-items-center mb-3 gap-4">
+                    <h5 class="mb-0">
+                        <i class="bi bi-funnel-fill me-2"></i>Filtros
+                    </h5>
+                    <button class="btn btn-sm btn-light" (click)="openFilter()">
+                        <i class="bi" [class.bi-chevron-up]="isOpenFilter"
+                            [class.bi-chevron-down]="!isOpenFilter"></i>
+                    </button>
+                </div>
+                <!-- Columna de Filtros (izquierda) -->
+                <div class="col-md-12 mb-4" [ngStyle]="{ display : isOpenFilter ? 'block' : 'none' }">
+                </div>
+            </div>
+
+            <!-- Columna de Productos (derecha) -->
+            <div class="col-md-10">
+                <!-- Listado de Productos -->
+                <ng-container *ngIf="products.length > 0">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+                        <div class="col" *ngFor="let product of products">
+                            <div class="card h-100 product-card shadow-sm border-0">
+                                <div class="position-relative">
+                                    <img [src]="product.product_image" class="card-img-top p-3"
+                                        alt="{{ product.product_name }}" style="height: 200px; object-fit: contain;">
+                                    <span *ngIf="product.discount"
+                                        class="badge bg-danger position-absolute top-0 end-0 m-2">
+                                        -{{ product.discount }}%
+                                    </span>
                                 </div>
-                                <div>
+                                <div class="card-body d-flex flex-column justify-content-between gap-2">
+                                    <h5 class="card-title text-wrap text-center">{{ product.product_name }}</h5>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="h5 text-primary">CLP {{ product.product_price | number:'1.0-0'
+                                                }}</span>
+                                            <span *ngIf="product.original_price"
+                                                class="text-decoration-line-through text-muted small ms-2">
+                                                CLP {{ product.original_price | number:'1.0-0' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between">
                                     <button type="button" class="btn btn-outline-secondary btn-sm"
                                         data-bs-toggle="offcanvas" data-bs-target="#offcanvasEditProduct"
-                                        aria-controls="offcanvasEditProduct"
-                                        (click)="editProduct(product)">Editar</button>
-                                </div>
-                                <div>
+                                        aria-controls="offcanvasEditProduct" (click)="editProduct(product)">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </button>
                                     <a [href]="product.product_link" target="_blank"
                                         class="btn btn-outline-primary btn-sm">
-                                        Ver Detalles
+                                        <i class="bi bi-eye"></i> Ver
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </ng-container>
 
-        <!-- Empty State -->
-        <ng-container *ngIf="products.length === 0">
-            <div class="text-center py-5">
-                <i class="bi bi-box-open display-4 text-muted mb-3"></i>
-                <h3 class="text-muted">No se encontraron productos</h3>
-                <p class="text-muted">Intenta ajustar tu búsqueda o filtro</p>
-                <button class="btn btn-primary mt-3">Actualizar Productos</button>
+                    <!-- Paginación -->
+                    <div class="d-flex justify-content-center mt-5">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </ng-container>
+
+                <!-- Empty State -->
+                <ng-container *ngIf="products.length === 0">
+                    <div class="text-center py-5">
+                        <i class="bi bi-box-open display-4 text-muted mb-3"></i>
+                        <h3 class="text-muted">No se encontraron productos</h3>
+                        <p class="text-muted">Intenta ajustar tus filtros de búsqueda</p>
+                        <button class="btn btn-primary mt-3">
+                            <i class="bi bi-arrow-repeat me-2"></i>Reintentar
+                        </button>
+                    </div>
+                </ng-container>
             </div>
-        </ng-container>
+        </div>
     </div>
 
     <!-- Pagination -->

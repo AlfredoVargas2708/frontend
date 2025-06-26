@@ -15,6 +15,7 @@ export class Products implements OnInit {
   pageSize: number = 10;
   totalPages: number = 0;
   productId: number = 0;
+  isOpenFilter: boolean = true;
 
   addProductForm: FormGroup;
   editProductForm: FormGroup;
@@ -47,8 +48,6 @@ export class Products implements OnInit {
         this.products = data.data.products;
         this.totalPages = data.data.pagination.totalPages;
         this.page = data.data.pagination.currentPage;
-
-        console.log('Products loaded:', this.products);
 
         this.cdr.markForCheck(); // Ensure the view is updated after data is loaded
       },
@@ -147,4 +146,11 @@ export class Products implements OnInit {
       console.warn('Formulario inválido');
     }
   }
+
+  openFilter() {
+    this.isOpenFilter = !this.isOpenFilter; // Toggle the filter visibility
+    console.log('Filter visibility:', this.isOpenFilter);
+  }
+
+  filterProducts(event: any) {}
 }
