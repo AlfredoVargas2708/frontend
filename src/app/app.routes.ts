@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { EmailExistsGuard } from './guards/email-exists.guard';
-import { Products } from './components/admin-componente/products/products';
 
 export const routes: Routes = [
     {

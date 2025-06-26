@@ -13,4 +13,8 @@ export class ProductsService {
   getProduct(code: string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/products/${code}`);
   }
+
+  getProducts(page: number, pageSize: number): Observable<any> {
+    return this.http.get<any[]>(`${environment.apiUrl}/products?page=${page}&pageSize=${pageSize}`);
+  }
 }
