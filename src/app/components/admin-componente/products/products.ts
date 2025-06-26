@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProductsService } from '../../../services/products.service';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -15,7 +15,14 @@ export class Products implements OnInit {
   pageSize: number = 10;
   totalPages: number = 0;
   productId: number = 0;
-  isOpenFilter: boolean = true;
+  isOpenFilter: boolean = false;
+  priceRange: any = { min: 0, max: 60000 }; // Default price range
+  searchTerm: string = ''; // Search term for filtering products
+  priceOptions: any[] = [
+    { min: 0, max: 20000, label: 'Hasta 20,000 CLP' },
+    { min: 20001, max: 40000, label: '20,001 CLP - 40,000 CLP' },
+    { min: 40001, max: 60000, label: '40,001 CLP - 60,000 CLP' },
+  ]
 
   addProductForm: FormGroup;
   editProductForm: FormGroup;
@@ -149,8 +156,34 @@ export class Products implements OnInit {
 
   openFilter() {
     this.isOpenFilter = !this.isOpenFilter; // Toggle the filter visibility
-    console.log('Filter visibility:', this.isOpenFilter);
   }
 
-  filterProducts(event: any) {}
+  filterProducts(event: any, type: string) {
+    const value = event.target.value;
+    if (type === 'search') {
+      this.searchTerm = value;
+    } else if (type === 'price') {
+      this.priceRange = { min: Number(value), max: this.priceOptions.find(option => option.min <= Number(value) && option.max >= Number(value)).max };
+    }
+  }
+
+  applyFilters() {
+    this.productsService.filterProducts(this.searchTerm, this.priceRange, this.page, this.pageSize).subscribe({
+      next: (data) => {
+        this.products = data.data;
+        this.totalPages = data.pagination.totalPages;
+        this.page = data.pagination.currentPage;
+        this.cdr.markForCheck(); // Ensure the view is updated after filtering
+      },
+      error: (error) => {
+        console.error('Error applying filters:', error);
+      }
+    });
+  }
+
+  resetFilters() {
+    this.searchTerm = '';
+    this.priceRange = { min: 0, max: 60000 }; // Reset to default price range
+    this.loadProducts(this.page, this.pageSize); // Reload products without filters
+  }
 }

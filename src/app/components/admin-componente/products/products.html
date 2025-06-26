@@ -206,7 +206,7 @@
                         </div>
                         <!-- Vista previa de imagen -->
                         <div class="mt-3 text-center">
-                            <img [src]="editProductForm.get('productImage')?.value || 'assets/img/placeholder-product.png'"
+                            <img [src]="editProductForm.get('productImage')?.value || ''"
                                 class="img-thumbnail preview-image" alt="Vista previa"
                                 style="max-height: 150px; display: block; margin: 0 auto; border: 2px dashed #dee2e6;">
                             <small class="text-muted d-block mt-1">Vista previa de la imagen</small>
@@ -248,23 +248,53 @@
     <!-- Products Grid -->
     <div class="container-fluid mb-4">
         <div class="row">
-            <div class="col-md-2">
-                <div class="d-flex justify-content-start align-items-center mb-3 gap-4">
+            <div [ngClass]="{'col-md-3': isOpenFilter, 'col-md-2': !isOpenFilter}">
+                <div class="d-flex justify-content-between align-items-center mb-3 gap-4">
                     <h5 class="mb-0">
                         <i class="bi bi-funnel-fill me-2"></i>Filtros
                     </h5>
                     <button class="btn btn-sm btn-light" (click)="openFilter()">
-                        <i class="bi" [class.bi-chevron-up]="isOpenFilter"
-                            [class.bi-chevron-down]="!isOpenFilter"></i>
+                        <i class="bi" [class.bi-chevron-left]="isOpenFilter"
+                            [class.bi-chevron-right]="!isOpenFilter"></i>
                     </button>
                 </div>
                 <!-- Columna de Filtros (izquierda) -->
                 <div class="col-md-12 mb-4" [ngStyle]="{ display : isOpenFilter ? 'block' : 'none' }">
+                    <form>
+                        <div class="mb-3">
+                            <label for="searchProduct" class="form-label fw-bold">
+                                <i class="bi bi-search me-2"></i>Buscar Producto
+                            </label>
+                            <input type="text" class="form-control shadow-sm" id="searchProduct"
+                                placeholder="Buscar por nombre o código" (input)="filterProducts($event, 'search')">
+                        </div>
+                        <div class="mb-3">
+                            <label for="priceRange" class="form-label fw-bold">
+                                <i class="bi bi-sliders me-2"></i>Rango de Precio
+                            </label>
+                            <div class="d-flex flex-column gap-2">
+                                <div *ngFor="let option of priceOptions">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="priceRange"
+                                            id="priceRange{{ option.min }}" [value]="option.min"
+                                            (change)="filterProducts($event, 'price')">
+                                        <label class="form-check-label" for="priceRange{{ option.min }}">
+                                            {{ option.label }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="d-flex justify-content-between mt-3">
+                        <button type="button" class="btn btn-primary" (click)="applyFilters()">Aplicar Filtros</button>
+                        <button type="button" class="btn btn-secondary" (click)="resetFilters()">Reiniciar Filtros</button>
+                    </div>
                 </div>
             </div>
 
             <!-- Columna de Productos (derecha) -->
-            <div class="col-md-10">
+            <div [ngClass]="{'col-md-9': isOpenFilter, 'col-md-10': !isOpenFilter}">
                 <!-- Listado de Productos -->
                 <ng-container *ngIf="products.length > 0">
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
@@ -273,10 +303,6 @@
                                 <div class="position-relative">
                                     <img [src]="product.product_image" class="card-img-top p-3"
                                         alt="{{ product.product_name }}" style="height: 200px; object-fit: contain;">
-                                    <span *ngIf="product.discount"
-                                        class="badge bg-danger position-absolute top-0 end-0 m-2">
-                                        -{{ product.discount }}%
-                                    </span>
                                 </div>
                                 <div class="card-body d-flex flex-column justify-content-between gap-2">
                                     <h5 class="card-title text-wrap text-center">{{ product.product_name }}</h5>
@@ -284,10 +310,6 @@
                                         <div>
                                             <span class="h5 text-primary">CLP {{ product.product_price | number:'1.0-0'
                                                 }}</span>
-                                            <span *ngIf="product.original_price"
-                                                class="text-decoration-line-through text-muted small ms-2">
-                                                CLP {{ product.original_price | number:'1.0-0' }}
-                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -304,27 +326,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Paginación -->
-                    <div class="d-flex justify-content-center mt-5">
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
                     </div>
                 </ng-container>
 

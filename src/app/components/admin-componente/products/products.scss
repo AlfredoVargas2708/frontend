@@ -78,3 +78,42 @@
         padding: 1rem;
     }
 }
+
+.popover {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+    min-width: 40px;
+    text-align: center;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+/* Triángulo indicador (opcional) */
+.popover::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #ffffff transparent;
+}
+
+/* Estilo para el valor dentro del popover */
+#popoverValue {
+    font-weight: 600;
+    color: #2c7be5;
+}

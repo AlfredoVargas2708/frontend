@@ -25,4 +25,8 @@ export class ProductsService {
   updateProduct(id: number, productData: any): Observable<any> {
     return this.http.put<any>(`${environment.apiUrl}/products/${id}`, productData);
   }
+
+  filterProducts(searchTerm: string, priceRange: any, page: number, pageSize: number): Observable<any> {
+    return this.http.get<any[]>(`${environment.apiUrl}/products/filter/search?search=${searchTerm}&minValue=${priceRange.min}&maxValue=${priceRange.max}&page=${page}&pageSize=${pageSize}`);
+  }
 }
