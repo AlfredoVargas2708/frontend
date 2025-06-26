@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProductsService } from '../../../services/products.service';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-products',
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './products.html',
   styleUrl: './products.scss'
 })
@@ -14,7 +15,17 @@ export class Products implements OnInit {
   pageSize: number = 10;
   totalPages: number = 0;
 
-  constructor(private productsService: ProductsService, private cdr: ChangeDetectorRef) { }
+  addProductForm: FormGroup;
+
+  constructor(private productsService: ProductsService, private cdr: ChangeDetectorRef, private fb: FormBuilder) {
+    this.addProductForm = this.fb.group({
+      productCode: ['', Validators.required],
+      productName: ['', Validators.required],
+      productPrice: ['', [Validators.required, Validators.min(0)]],
+      productImage: ['', Validators.required],
+      productLink: ['', [Validators.required, Validators.pattern('https?://.+')]]
+    });
+  }
 
   ngOnInit() {
     this.loadProducts(this.page, this.pageSize);
@@ -76,5 +87,23 @@ export class Products implements OnInit {
     }
 
     return displayedPages;
+  }
+
+  agregarProducto() {
+    if (this.addProductForm.valid) {
+      const productData = this.addProductForm.value;
+      this.productsService.addProduct(productData).subscribe({
+        next: (response) => {
+          console.log('Producto agregado:', response);
+          this.loadProducts(this.page, this.pageSize); // Reload products after adding
+          this.addProductForm.reset(); // Reset the form
+        },
+        error: (error) => {
+          console.error('Error al agregar producto:', error);
+        }
+      });
+    } else {
+      console.warn('Formulario inválido');
+    }
   }
 }

@@ -17,4 +17,8 @@ export class ProductsService {
   getProducts(page: number, pageSize: number): Observable<any> {
     return this.http.get<any[]>(`${environment.apiUrl}/products?page=${page}&pageSize=${pageSize}`);
   }
+
+  addProduct(productData: any): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/products`, productData);
+  }
 }

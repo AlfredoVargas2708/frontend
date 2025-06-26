@@ -4,9 +4,49 @@
         <h1 class="m-0 text-primary">
             <i class="bi bi-box-seam me-2"></i>Productos
         </h1>
-        <button class="btn btn-success">
+        <button class="btn btn-success" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddProduct"
+            aria-controls="offcanvasAddProduct">
             <i class="bi bi-plus-circle me-2"></i>Agregar Producto
         </button>
+
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddProduct"
+            aria-labelledby="offcanvasAddProductLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasAddProductLabel">Agregar Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <form [formGroup]="addProductForm">
+                    <div class="mb-3">
+                        <label for="productCode" class="form-label">Código del Producto</label>
+                        <input type="text" class="form-control" id="productCode" formControlName="productCode"
+                            placeholder="Ingrese el código del producto" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Nombre del Producto</label>
+                        <input type="text" class="form-control" id="productName" formControlName="productName"
+                            placeholder="Ingrese el nombre del producto" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productPrice" class="form-label">Precio del Producto</label>
+                        <input type="text" class="form-control" id="productPrice" formControlName="productPrice"
+                            placeholder="Ingrese el precio del producto" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productImage" class="form-label">Imagen del Producto</label>
+                        <input type="text" class="form-control" id="productImage" formControlName="productImage"
+                            placeholder="Ingrese la URL de la imagen del producto" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productLink" class="form-label">Enlace del Producto</label>
+                        <input type="text" class="form-control" id="productLink" formControlName="productLink"
+                            placeholder="Ingrese el enlace del producto" required>
+                    </div>
+                </form>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="offcanvas" aria-label="Close"
+                    (click)="agregarProducto()">Agregar Producto</button>
+            </div>
+        </div>
     </div>
 
     <!-- Products Grid -->
@@ -21,7 +61,8 @@
                             <h5 class="card-title text-wrap text-center">{{ product.product_name }}</h5>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <span class="h5 text-primary">CLP {{ product.product_price | number:'1.0-0' }}</span>
+                                    <span class="h5 text-primary">CLP {{ product.product_price | number:'1.0-0'
+                                        }}</span>
                                 </div>
                                 <div>
                                     <a [href]="product.product_link" target="_blank"
