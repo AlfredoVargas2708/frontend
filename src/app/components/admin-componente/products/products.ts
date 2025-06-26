@@ -14,11 +14,21 @@ export class Products implements OnInit {
   page: number = 1;
   pageSize: number = 10;
   totalPages: number = 0;
+  productId: number = 0;
 
   addProductForm: FormGroup;
+  editProductForm: FormGroup;
 
   constructor(private productsService: ProductsService, private cdr: ChangeDetectorRef, private fb: FormBuilder) {
     this.addProductForm = this.fb.group({
+      id: [''],
+      productCode: ['', Validators.required],
+      productName: ['', Validators.required],
+      productPrice: ['', [Validators.required, Validators.min(0)]],
+      productImage: ['', Validators.required],
+      productLink: ['', [Validators.required, Validators.pattern('https?://.+')]]
+    });
+    this.editProductForm = this.fb.group({
       productCode: ['', Validators.required],
       productName: ['', Validators.required],
       productPrice: ['', [Validators.required, Validators.min(0)]],
@@ -37,6 +47,8 @@ export class Products implements OnInit {
         this.products = data.data.products;
         this.totalPages = data.data.pagination.totalPages;
         this.page = data.data.pagination.currentPage;
+
+        console.log('Products loaded:', this.products);
 
         this.cdr.markForCheck(); // Ensure the view is updated after data is loaded
       },
@@ -100,6 +112,35 @@ export class Products implements OnInit {
         },
         error: (error) => {
           console.error('Error al agregar producto:', error);
+        }
+      });
+    } else {
+      console.warn('Formulario inválido');
+    }
+  }
+
+  editProduct(product: any) {
+    this.productId = product.product_id; // Store the product ID for later use
+    this.editProductForm.patchValue({
+      productCode: product.product_code,
+      productName: product.product_name,
+      productPrice: product.product_price,
+      productImage: product.product_image,
+      productLink: product.product_link
+    });
+  }
+
+  updateProduct() {
+    if (this.editProductForm.valid) {
+      const productData = this.editProductForm.value;
+      this.productsService.updateProduct(this.productId, productData).subscribe({
+        next: (response) => {
+          console.log('Producto actualizado:', response);
+          this.loadProducts(this.page, this.pageSize); // Reload products after updating
+          this.editProductForm.reset(); // Reset the form
+        },
+        error: (error) => {
+          console.error('Error al actualizar producto:', error);
         }
       });
     } else {

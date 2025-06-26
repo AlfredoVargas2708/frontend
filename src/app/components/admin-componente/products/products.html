@@ -8,46 +8,169 @@
             aria-controls="offcanvasAddProduct">
             <i class="bi bi-plus-circle me-2"></i>Agregar Producto
         </button>
+    </div>
 
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddProduct"
-            aria-labelledby="offcanvasAddProductLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasAddProductLabel">Agregar Producto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <!-- Offcanvas for Adding Product -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddProduct"
+        aria-labelledby="offcanvasAddProductLabel" data-bs-backdrop="true">
+        <div class="offcanvas-header bg-primary text-white">
+            <div>
+                <h5 class="offcanvas-title mb-1" id="offcanvasAddProductLabel">
+                    <i class="bi bi-plus-circle-fill me-2"></i>Agregar Nuevo Producto
+                </h5>
+                <p class="small mb-0 opacity-75">Complete todos los campos requeridos</p>
             </div>
-            <div class="offcanvas-body">
-                <form [formGroup]="addProductForm">
-                    <div class="mb-3">
-                        <label for="productCode" class="form-label">Código del Producto</label>
-                        <input type="text" class="form-control" id="productCode" formControlName="productCode"
-                            placeholder="Ingrese el código del producto" required>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                aria-label="Close"></button>
+        </div>
+
+        <div class="offcanvas-body p-4">
+            <form [formGroup]="addProductForm" class="needs-validation" novalidate>
+                <!-- Código del Producto -->
+                <div class="mb-4">
+                    <label for="productCode" class="form-label fw-bold">
+                        <i class="bi bi-upc-scan me-2"></i>Código del Producto
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light">
+                            <i class="bi bi-tag"></i>
+                        </span>
+                        <input type="text" class="form-control shadow-sm" id="productCode" formControlName="productCode"
+                            placeholder="Ej: PROD-001" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="productName" class="form-label">Nombre del Producto</label>
-                        <input type="text" class="form-control" id="productName" formControlName="productName"
-                            placeholder="Ingrese el nombre del producto" required>
+                    <div class="form-text small">Código de barras del producto</div>
+                </div>
+
+                <!-- Nombre del Producto -->
+                <div class="mb-4">
+                    <label for="productName" class="form-label fw-bold">
+                        <i class="bi bi-card-text me-2"></i>Nombre del Producto
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light">
+                            <i class="bi bi-box-seam"></i>
+                        </span>
+                        <input type="text" class="form-control shadow-sm" id="productName" formControlName="productName"
+                            placeholder="Ej: Laptop HP EliteBook" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="productPrice" class="form-label">Precio del Producto</label>
-                        <input type="text" class="form-control" id="productPrice" formControlName="productPrice"
-                            placeholder="Ingrese el precio del producto" required>
+                </div>
+
+                <!-- Precio en fila para pantallas grandes -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="productPrice" class="form-label fw-bold">
+                            <i class="bi bi-currency-dollar me-2"></i>Precio
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">$</span>
+                            <input type="number" class="form-control shadow-sm" id="productPrice"
+                                formControlName="productPrice" placeholder="0.00" step="0.01" required>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="productImage" class="form-label">Imagen del Producto</label>
-                        <input type="text" class="form-control" id="productImage" formControlName="productImage"
-                            placeholder="Ingrese la URL de la imagen del producto" required>
+                </div>
+
+                <!-- Imagen del Producto -->
+                <div class="mb-4">
+                    <label for="productImage" class="form-label fw-bold">
+                        <i class="bi bi-image me-2"></i>Imagen del Producto
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light">
+                            <i class="bi bi-link-45deg"></i>
+                        </span>
+                        <input type="url" class="form-control shadow-sm" id="productImage"
+                            formControlName="productImage" placeholder="https://ejemplo.com/imagen.jpg" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="productLink" class="form-label">Enlace del Producto</label>
-                        <input type="text" class="form-control" id="productLink" formControlName="productLink"
-                            placeholder="Ingrese el enlace del producto" required>
+                    <div class="form-text small">URL completa de la imagen</div>
+                    <div class="mt-2 text-center">
+                        <img [src]="addProductForm.get('productImage')?.value || ''" class="img-thumbnail preview-image"
+                            alt="Vista previa" style="max-height: 120px; display: block; margin: 0 auto;">
                     </div>
-                </form>
-                <button type="submit" class="btn btn-primary" data-bs-dismiss="offcanvas" aria-label="Close"
-                    (click)="agregarProducto()">Agregar Producto</button>
+                </div>
+
+                <!-- Enlace del Producto -->
+                <div class="mb-4">
+                    <label for="productLink" class="form-label fw-bold">
+                        <i class="bi bi-box-arrow-up-right me-2"></i>Enlace del Producto
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light">
+                            <i class="bi bi-globe"></i>
+                        </span>
+                        <input type="url" class="form-control shadow-sm" id="productLink" formControlName="productLink"
+                            placeholder="https://tienda.com/producto" required>
+                    </div>
+                    <div class="form-text small">Enlace a la página del producto</div>
+                </div>
+            </form>
+        </div>
+
+        <div class="offcanvas-footer p-3 border-top bg-light">
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+                    <i class="bi bi-x-circle me-2"></i>Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary" (click)="agregarProducto()"
+                    [disabled]="!addProductForm.valid" data-bs-dismiss="offcanvas">
+                    <i class="bi bi-check-circle me-2"></i>Guardar Producto
+                </button>
             </div>
         </div>
     </div>
+
+    <!-- Offcanvas for Editing Product -->
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEditProduct"
+        aria-labelledby="offcanvasEditProductLabel" data-bs-backdrop="true">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasEditProductLabel">Editar Producto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form [formGroup]="editProductForm">
+                <!-- Código del Producto -->
+                <div class="mb-3">
+                    <label for="productCode" class="form-label">Código del Producto</label>
+                    <input type="text" class="form-control" id="productCode" formControlName="productCode"
+                        placeholder="Ej: PROD-001" required>
+                </div>
+
+                <!-- Nombre del Producto -->
+                <div class="mb-3">
+                    <label for="productName" class="form-label">Nombre del Producto</label>
+                    <input type="text" class="form-control" id="productName" formControlName="productName"
+                        placeholder="Ej: Laptop HP EliteBook" required>
+                </div>
+
+                <!-- Precio -->
+                <div class="mb-3">
+                    <label for="productPrice" class="form-label">Precio</label>
+                    <input type="number" class="form-control" id="productPrice" formControlName="productPrice"
+                        placeholder="$0.00" step="0.01" required>
+                </div>
+
+                <!-- Imagen del Producto -->
+                <div class="mb-3">
+                    <label for="productImage" class="form-label">Imagen del Producto</label>
+                    <input type="url" class="form-control" id="productImage" formControlName="productImage"
+                        placeholder="https://ejemplo.com/imagen.jpg" required>
+                </div>
+
+                <!-- Enlace del Producto -->
+                <div class="mb-3">
+                    <label for="productLink" class="form-label">Enlace del Producto</label>
+                    <input type="url" class="form-control" id="productLink" formControlName="productLink"
+                        placeholder="https://tienda.com/producto" required>
+                </div>
+            </form>
+
+            <div class="mt-4">
+                <button type="button" class="btn btn-primary" (click)="updateProduct()"
+                    data-bs-dismiss="offcanvas">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Products Grid -->
     <div class="mb-4">
@@ -63,6 +186,12 @@
                                 <div>
                                     <span class="h5 text-primary">CLP {{ product.product_price | number:'1.0-0'
                                         }}</span>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasEditProduct"
+                                        aria-controls="offcanvasEditProduct"
+                                        (click)="editProduct(product)">Editar</button>
                                 </div>
                                 <div>
                                     <a [href]="product.product_link" target="_blank"
