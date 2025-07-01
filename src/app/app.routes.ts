@@ -31,11 +31,6 @@ export const routes: Routes = [
                 path: 'sales',
                 loadComponent: () => import('./components/admin-componente/sales/sales').then(m => m.Sales),
                 title: 'Ventas',
-            },
-            {
-                path: 'config',
-                loadComponent: () => import('./components/admin-componente/config/config').then(m => m.Config),
-                title: 'Configuración',
             }
         ]
     },

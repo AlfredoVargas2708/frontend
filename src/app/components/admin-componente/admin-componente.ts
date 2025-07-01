@@ -9,6 +9,7 @@ import { Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router'
   styleUrl: './admin-componente.scss'
 })
 export class AdminComponente {
+  isSidebarOpen = false;
 
   constructor(
     private router: Router
@@ -16,5 +17,9 @@ export class AdminComponente {
 
   logout() {
     this.router.navigate(['/login']); // Redirige al login
+  }
+
+  isActive(route: string): boolean {
+    return this.router.isActive(route, true);
   }
 }

@@ -1,45 +1,32 @@
-<nav class="navbar bg-white shadow-sm fixed-top">
-    <div class="container-fluid">
-        <button class="navbar-toggler border-0 shadow-sm" type="button" data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand fw-bold text-primary" href="#">Administración</a>
-
-        <div class="offcanvas offcanvas-start custom-offcanvas" tabindex="-1" id="offcanvasNavbar"
-            aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header border-bottom">
-                <h5 class="offcanvas-title fw-bold text-primary" id="offcanvasNavbarLabel">🔧 Alogar Administración</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body d-flex flex-column">
-                <ul class="navbar-nav flex-grow-1 gap-2">
+<div class="container-fluid">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <button type="button" class="btn" (click)="isSidebarOpen = !isSidebarOpen">
+                <i class="bi bi-list"></i>
+            </button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link fw-semibold text-dark hover-link" [routerLink]="['products']"
-                            routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-                            data-bs-dismiss="offcanvas" aria-label="Close">📦 Productos</a>
+                        <a class="nav-link" [ngClass]="{'active': isActive('/admin'), 'disabled': !isActive('/admin')}">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-semibold text-dark hover-link" [routerLink]="['sales']"
-                            routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-                            data-bs-dismiss="offcanvas" aria-label="Close">💰 Ventas</a>
+                        <a class="nav-link" [ngClass]="{'active': isActive('/admin/products'), 'disabled': !isActive('/admin/products')}">Productos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-semibold text-dark hover-link" [routerLink]="['config']"
-                            routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-                            data-bs-dismiss="offcanvas" aria-label="Close">⚙️ Configuración</a>
+                        <a class="nav-link" [ngClass]="{'active': isActive('/admin/sales'), 'disabled': !isActive('/admin/sales')}">Ventas</a>
                     </li>
-                    <li class="nav-item mt-auto"> <!-- mt-auto empuja este item al final -->
-                        <a class="nav-link fw-semibold text-danger hover-link" (click)="logout()">
-                            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-                        </a>
+                    <li class="nav-item">
+                        <a class="nav-link" [ngClass]="{'active': isActive('/admin/users'), 'disabled': !isActive('/admin/users')}">Usuarios</a>
                     </li>
                 </ul>
             </div>
         </div>
+    </nav>
+    <div>
+        <router-outlet></router-outlet>
     </div>
-</nav>
-
-<div class="container-fluid mt-5 pt-5">
-    <router-outlet></router-outlet>
 </div>
