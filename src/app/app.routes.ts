@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { EmailExistsGuard } from './guards/email-exists.guard';
 
 export const routes: Routes = [
     {
@@ -16,29 +15,12 @@ export const routes: Routes = [
         path: 'admin',
         loadComponent: () => import('./components/admin-componente/admin-componente').then(m => m.AdminComponente),
         title: 'Administración',
-        children: [
-            {
-                path: '',
-                redirectTo: '',
-                pathMatch: 'full',
-            },
-            {
-                path: 'products',
-                loadComponent: () => import('./components/admin-componente/products/products').then(m => m.Products),
-                title: 'Productos',
-            },
-            {
-                path: 'sales',
-                loadComponent: () => import('./components/admin-componente/sales/sales').then(m => m.Sales),
-                title: 'Ventas',
-            }
-        ]
+        loadChildren: () => import('./components/admin-componente/admin-componente.routes').then(m => m.adminRoutes),
     },
     {
         path: 'restore-password',
         loadComponent: () => import('./components/restore-password/restore-password').then(m => m.RestorePassword),
         title: 'Restaurar contraseña',
-        canActivate: [EmailExistsGuard]
     },
     {
         path: 'employee',
@@ -49,7 +31,6 @@ export const routes: Routes = [
         path: 'confirm-email/:email',
         loadComponent: () => import('./components/login-components/confirmation-component/confirmation-component').then(m => m.ConfirmationComponent),
         title: 'Confirmación',
-        canActivate: [EmailExistsGuard]
     },
     {
         path: 'email-not-found',

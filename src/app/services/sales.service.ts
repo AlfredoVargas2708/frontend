@@ -14,6 +14,10 @@ export class SalesService {
     return this.http.get<number>(`${environment.apiUrl}/sales/count`);
   }
 
+  getSalesByDateRange(startDate: string, endDate: string): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/sales?startDate=${startDate}&endDate=${endDate}`);
+  }
+
   createSale(sale: any, products: any[]): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/sales`, { sale, products });
   }

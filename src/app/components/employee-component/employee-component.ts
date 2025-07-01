@@ -67,7 +67,7 @@ export class EmployeeComponent implements AfterViewInit, OnInit {
     this.productService.getProduct(code).subscribe({
       next: (data) => {
         this.productForm.patchValue({
-          id: data.id,
+          id: data.product_id,
           code: data.product_code,
           product: data.product_name,
           price: data.product_price,
