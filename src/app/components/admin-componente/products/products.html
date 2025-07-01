@@ -1,6 +1,6 @@
-<div class="products-container container-fluid py-4">
+<div class="products-container">
     <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded-3 shadow-sm">
+<!--     <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded-3 shadow-sm">
         <h1 class="m-0 text-primary">
             <i class="bi bi-box-seam me-2"></i>Productos
         </h1>
@@ -8,10 +8,10 @@
             aria-controls="offcanvasAddProduct">
             <i class="bi bi-plus-circle me-2"></i>Agregar Producto
         </button>
-    </div>
+    </div> -->
 
     <!-- Offcanvas for Adding Product -->
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddProduct"
+<!--     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddProduct"
         aria-labelledby="offcanvasAddProductLabel" data-bs-backdrop="true">
         <div class="offcanvas-header bg-primary text-white">
             <div>
@@ -26,7 +26,6 @@
 
         <div class="offcanvas-body p-4">
             <form [formGroup]="addProductForm" class="needs-validation" novalidate>
-                <!-- Código del Producto -->
                 <div class="mb-4">
                     <label for="productCode" class="form-label fw-bold">
                         <i class="bi bi-upc-scan me-2"></i>Código del Producto
@@ -41,7 +40,6 @@
                     <div class="form-text small">Código de barras del producto</div>
                 </div>
 
-                <!-- Nombre del Producto -->
                 <div class="mb-4">
                     <label for="productName" class="form-label fw-bold">
                         <i class="bi bi-card-text me-2"></i>Nombre del Producto
@@ -55,7 +53,6 @@
                     </div>
                 </div>
 
-                <!-- Precio en fila para pantallas grandes -->
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label for="productPrice" class="form-label fw-bold">
@@ -69,7 +66,6 @@
                     </div>
                 </div>
 
-                <!-- Imagen del Producto -->
                 <div class="mb-4">
                     <label for="productImage" class="form-label fw-bold">
                         <i class="bi bi-image me-2"></i>Imagen del Producto
@@ -88,7 +84,6 @@
                     </div>
                 </div>
 
-                <!-- Enlace del Producto -->
                 <div class="mb-4">
                     <label for="productLink" class="form-label fw-bold">
                         <i class="bi bi-box-arrow-up-right me-2"></i>Enlace del Producto
@@ -116,12 +111,11 @@
                 </button>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Offcanvas for Editing Product -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEditProduct"
+<!--     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEditProduct"
         aria-labelledby="offcanvasEditProductLabel" data-bs-backdrop="true">
-        <!-- Encabezado con estilo mejorado -->
         <div class="offcanvas-header bg-primary text-white">
             <div>
                 <h5 class="offcanvas-title mb-1" id="offcanvasEditProductLabel">
@@ -133,16 +127,13 @@
                 aria-label="Close"></button>
         </div>
 
-        <!-- Cuerpo del offcanvas -->
         <div class="offcanvas-body p-4">
             <form [formGroup]="editProductForm" class="needs-validation" novalidate>
-                <!-- Sección de información básica -->
                 <div class="mb-4 border-bottom pb-3">
                     <h6 class="fw-bold text-primary mb-3">
                         <i class="bi bi-info-circle me-2"></i>Información Básica
                     </h6>
 
-                    <!-- Código del Producto -->
                     <div class="mb-3">
                         <label for="productCode" class="form-label fw-semibold">
                             <i class="bi bi-upc-scan me-2"></i>Código del Producto
@@ -156,7 +147,6 @@
                         </div>
                     </div>
 
-                    <!-- Nombre del Producto -->
                     <div class="mb-3">
                         <label for="productName" class="form-label fw-semibold">
                             <i class="bi bi-card-text me-2"></i>Nombre del Producto
@@ -171,9 +161,7 @@
                     </div>
                 </div>
 
-                <!-- Sección de precio e imagen -->
                 <div class="row g-3 mb-4 border-bottom pb-3">
-                    <!-- Precio -->
                     <div class="col-md-6">
                         <label for="productPrice" class="form-label fw-semibold">
                             <i class="bi bi-currency-dollar me-2"></i>Precio
@@ -186,13 +174,11 @@
                     </div>
                 </div>
 
-                <!-- Sección multimedia -->
                 <div class="mb-4 border-bottom pb-3">
                     <h6 class="fw-bold text-primary mb-3">
                         <i class="bi bi-image me-2"></i>Multimedia
                     </h6>
 
-                    <!-- Imagen del Producto -->
                     <div class="mb-3">
                         <label for="productImage" class="form-label fw-semibold">
                             <i class="bi bi-image me-2"></i>URL de la Imagen
@@ -204,7 +190,6 @@
                             <input type="url" class="form-control shadow-sm" id="productImage"
                                 formControlName="productImage" placeholder="https://ejemplo.com/imagen.jpg" required>
                         </div>
-                        <!-- Vista previa de imagen -->
                         <div class="mt-3 text-center">
                             <img [src]="editProductForm.get('productImage')?.value || ''"
                                 class="img-thumbnail preview-image" alt="Vista previa"
@@ -214,7 +199,6 @@
                     </div>
                 </div>
 
-                <!-- Enlace del Producto -->
                 <div class="mb-4">
                     <h6 class="fw-bold text-primary mb-3">
                         <i class="bi bi-link me-2"></i>Enlace del Producto
@@ -231,7 +215,6 @@
             </form>
         </div>
 
-        <!-- Footer con botones de acción -->
         <div class="offcanvas-footer p-3 bg-light border-top">
             <div class="d-flex justify-content-between">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
@@ -243,10 +226,10 @@
                 </button>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Products Grid -->
-    <div class="container-fluid mb-4">
+<!--     <div class="container-fluid mb-4">
         <div class="row">
             <div [ngClass]="{'col-md-3': isOpenFilter, 'col-md-2': !isOpenFilter}">
                 <div class="d-flex justify-content-between align-items-center mb-3 gap-4">
@@ -258,7 +241,6 @@
                             [class.bi-chevron-right]="!isOpenFilter"></i>
                     </button>
                 </div>
-                <!-- Columna de Filtros (izquierda) -->
                 <div class="col-md-12 mb-4" [ngStyle]="{ display : isOpenFilter ? 'block' : 'none' }">
                     <form>
                         <div class="mb-3">
@@ -293,9 +275,7 @@
                 </div>
             </div>
 
-            <!-- Columna de Productos (derecha) -->
             <div [ngClass]="{'col-md-9': isOpenFilter, 'col-md-10': !isOpenFilter}">
-                <!-- Listado de Productos -->
                 <ng-container *ngIf="products.length > 0">
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
                         <div class="col" *ngFor="let product of products">
@@ -329,7 +309,6 @@
                     </div>
                 </ng-container>
 
-                <!-- Empty State -->
                 <ng-container *ngIf="products.length === 0">
                     <div class="text-center py-5">
                         <i class="bi bi-box-open display-4 text-muted mb-3"></i>
@@ -342,27 +321,24 @@
                 </ng-container>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Pagination -->
-    <div *ngIf="totalPages > 1" class="d-flex flex-column align-items-center mt-4">
+<!--     <div *ngIf="totalPages > 1" class="d-flex flex-column align-items-center mt-4">
         <nav aria-label="Page navigation">
             <ul class="pagination">
-                <!-- First Page Button -->
                 <li class="page-item" [class.disabled]="page === 1">
                     <button class="page-link" (click)="changePage(1)" aria-label="First">
                         <span aria-hidden="true">&laquo;&laquo;</span>
                     </button>
                 </li>
 
-                <!-- Previous Page Button -->
                 <li class="page-item" [class.disabled]="page === 1">
                     <button class="page-link" (click)="changePage(page - 1)" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </button>
                 </li>
 
-                <!-- Show first page + ellipsis if needed -->
                 <ng-container *ngIf="getDisplayedPages()[0] > 1">
                     <li class="page-item">
                         <button class="page-link" (click)="changePage(1)">1</button>
@@ -372,12 +348,10 @@
                     </li>
                 </ng-container>
 
-                <!-- Displayed Pages -->
                 <li class="page-item" *ngFor="let p of getDisplayedPages()" [class.active]="p === page">
                     <button class="page-link" (click)="changePage(p)">{{ p }}</button>
                 </li>
 
-                <!-- Show last page + ellipsis if needed -->
                 <ng-container *ngIf="getDisplayedPages()[getDisplayedPages().length - 1] < totalPages">
                     <li class="page-item disabled">
                         <span class="page-link">...</span>
@@ -387,14 +361,12 @@
                     </li>
                 </ng-container>
 
-                <!-- Next Page Button -->
                 <li class="page-item" [class.disabled]="page === totalPages">
                     <button class="page-link" (click)="changePage(page + 1)" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </button>
                 </li>
 
-                <!-- Last Page Button -->
                 <li class="page-item" [class.disabled]="page === totalPages">
                     <button class="page-link" (click)="changePage(totalPages)" aria-label="Last">
                         <span aria-hidden="true">&raquo;&raquo;</span>
@@ -403,5 +375,5 @@
             </ul>
         </nav>
         <small class="text-muted mt-2">Showing page {{ page }} of {{ totalPages }}</small>
-    </div>
+    </div> -->
 </div>
