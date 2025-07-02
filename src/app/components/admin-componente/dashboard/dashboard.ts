@@ -6,9 +6,12 @@ import {
   ApexXAxis,
   ApexDataLabels,
   ApexTitleSubtitle,
+  ApexPlotOptions,
+  ApexMarkers,
   ApexStroke,
   ApexGrid,
-  NgApexchartsModule
+  NgApexchartsModule,
+  ApexYAxis
 } from "ng-apexcharts";
 import { SalesService } from '../../../services/sales.service';
 import { ProductsService } from '../../../services/products.service';
@@ -21,9 +24,13 @@ export type ChartOptions = {
   grid: ApexGrid;
   stroke: ApexStroke;
   title: ApexTitleSubtitle;
-  markers?: {
-    size: number;
-  }
+  colors: String[];
+  plotOptions?: ApexPlotOptions;
+  markers?: ApexMarkers;
+  legend?: {
+    show: boolean;
+  },
+  yaxis: ApexYAxis;
 };
 
 @Component({
@@ -79,6 +86,18 @@ export class Dashboard implements AfterViewInit {
     }, 1000)
   }
 
+  generateColors(length: number): string[] {
+    const colors: string[] = [];
+    for (let i = 0; i < length; i++) {
+      // Hue fijo en verde (120), variar saturación y/o luz
+      const saturation = 60 + (i * 20) % 40; // 60% - 99%
+      const lightness = 40 + (i * 10) % 30;  // 40% - 69%
+      colors.push(`hsl(120, ${saturation}%, ${lightness}%)`);
+    }
+    return colors;
+  }
+
+
   createSalesChart(data: any[]) {
     this.salesChartOptions = {
       series: [
@@ -88,7 +107,7 @@ export class Dashboard implements AfterViewInit {
         }
       ],
       chart: {
-        height: 400,
+        height: 500,
         width: 600,
         type: "line",
         zoom: {
@@ -102,11 +121,17 @@ export class Dashboard implements AfterViewInit {
         enabled: false
       },
       stroke: {
-        curve: "smooth"  // Changed to 'smooth' for a better line appearance
+        curve: "smooth" // Estilo de la línea
       },
       title: {
         text: `Ventas por Mes en el año ${new Date().getFullYear()}`,
-        align: "center"
+        align: "center",
+        style: {
+          fontSize: '20px',
+          fontWeight: 'bold',
+          color: '#333',
+          fontFamily: 'Arial, sans-serif',
+        },
       },
       grid: {
         row: {
@@ -115,42 +140,79 @@ export class Dashboard implements AfterViewInit {
         }
       },
       xaxis: {
-        categories: data.map(sale => sale.mes)  // Assuming 'month' is the field for the month
+        categories: data.map(sale => sale.mes)
       },
+      yaxis: {
+        title: {
+          text: 'Total Vendido (en CLP)'  // Título del eje Y
+        }
+      },
+      colors: ['#5c9a45'], // Color de la línea
       markers: {
-        size: 5  // Optional: Adjust the size of the markers on the line
+        size: 5,  // Tamaño de los marcadores en la línea
+        colors: ['#8AE681'],  // Color de los marcadores
       }
     }
   }
 
   createProductsChart(data: any[]) {
+    const productNames = data.map(product => product.product_name);
+    const quantities = data.map(product => product.total_vendido);
+    const colors = this.generateColors(quantities.length);
+
+    console.log('Colores generados:', colors);
+
     this.productsChartOptions = {
       series: [
         {
           name: "Productos",
-          data: data.map(product => product.total_vendido)  // Assuming 'total_vendido' is the field for product quantity
+          data: quantities
         }
       ],
       chart: {
-        height: 300,
-        width: 650,
+        height: 350,
         type: "bar",
-        zoom: {
-          enabled: false
-        },
-        toolbar: {
-          show: false
-        },
+        toolbar: { show: false },
       },
+      legend: {
+        show: false
+      },
+      plotOptions: {
+        bar: {
+          distributed: true, // Permite colores diferentes por barra
+          horizontal: false, // Cambia a true si quieres barras horizontales
+          columnWidth: "50%" // Ancho de las barras
+        }
+      },
+      colors: colors, // Se aplican por barra
       dataLabels: {
         enabled: false
       },
       stroke: {
-        curve: "smooth"
+        show: true,
+        width: 2,
+        colors: ["transparent"]
+      },
+      xaxis: {
+        categories: productNames,
+        labels: {
+          rotate: -45
+        }
+      },
+      yaxis: {
+        title: {
+          text: 'Cantidad'  // Título del eje Y
+        }
       },
       title: {
-        text: `Cantidad de Productos Vendidos en el año ${new Date().getFullYear()}`,
-        align: "center"
+        text: `Productos Vendidos en ${this.currentYear}`,
+        align: "center",
+        style: {
+          fontSize: '20px',
+          fontWeight: 'bold',
+          color: '#333',
+          fontFamily: 'Arial, sans-serif',
+        }
       },
       grid: {
         row: {
@@ -158,15 +220,7 @@ export class Dashboard implements AfterViewInit {
           opacity: 0.5
         }
       },
-      xaxis: {
-        categories: data.map(product => product.product_name),  // Assuming 'product_name' is the field for the product name
-        labels: {
-          show: false
-        }
-      },
-      markers: {
-        size: 5
-      }
-    }
+    };
   }
+
 }
