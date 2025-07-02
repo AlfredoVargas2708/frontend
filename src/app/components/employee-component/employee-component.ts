@@ -23,7 +23,12 @@ export class EmployeeComponent implements AfterViewInit, OnInit {
   @ViewChild('codeInput') codeInput!: ElementRef<HTMLInputElement>;
   @ViewChild('cantInput') cantInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private fb: FormBuilder, private productService: ProductsService, private salesService: SalesService, private cdf: ChangeDetectorRef) {
+  constructor(
+    private fb: FormBuilder,
+    private productService: ProductsService,
+    private salesService: SalesService,
+    private cdf: ChangeDetectorRef) 
+    {
     this.productForm = this.fb.group({
       id: [null],
       code: ['', Validators.required],
@@ -50,6 +55,7 @@ export class EmployeeComponent implements AfterViewInit, OnInit {
           date: [new Date()],
           total: [0],
         });
+        this.cdf.markForCheck(); // Asegura que la vista se actualice
       },
       error: (err) => {
         console.error('Error al obtener cantidad de ventas', err);
