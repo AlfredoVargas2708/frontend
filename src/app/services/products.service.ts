@@ -11,11 +11,15 @@ export class ProductsService {
   constructor(private http: HttpClient) { }
 
   getProduct(code: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/products/${code}`);
+    return this.http.get<any>(`${environment.apiUrl}/products/search/${code}`);
   }
 
   getProducts(page: number, pageSize: number): Observable<any> {
     return this.http.get<any[]>(`${environment.apiUrl}/products?page=${page}&pageSize=${pageSize}`);
+  }
+
+  getCantProducts(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/products/count`);
   }
 
   addProduct(productData: any): Observable<any> {
