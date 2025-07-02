@@ -160,8 +160,6 @@ export class Dashboard implements AfterViewInit {
     const quantities = data.map(product => product.total_vendido);
     const colors = this.generateColors(quantities.length);
 
-    console.log('Colores generados:', colors);
-
     this.productsChartOptions = {
       series: [
         {

@@ -1,4 +1,11 @@
 .nav-link {
+    cursor: pointer;
+
+    &:hover, &.active:hover, &.inactive:hover {
+        text-decoration: none; // Remove underline on hover
+        color: #ffffff; // White color on hover
+    }
+
     &.active {
         color: #ffffff; // White color for active links
         font-weight: bold; // Bold text for active links
