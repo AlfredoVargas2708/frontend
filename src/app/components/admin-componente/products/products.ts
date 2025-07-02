@@ -14,6 +14,7 @@ export class Products implements OnInit {
   page: number = 1;
   pageSize: number = 10;
   products: any[] = [];
+  activeView: string = 'list'; // Default view is 'list'
 
   constructor(
     private productsService: ProductsService,
@@ -41,6 +42,11 @@ export class Products implements OnInit {
         }, 1000); // Delay to simulate loading
       }
     })
+  }
+
+  changeView(view: string) {
+    this.activeView = view;
+    this.cdr.markForCheck(); // Ensure the view is updated when changing views
   }
 
 }

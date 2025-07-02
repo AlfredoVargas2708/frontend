@@ -5,15 +5,15 @@
             <h1>Productos</h1>
         </div>
         <div class="d-flex flex-row justify-content-between col-md-3">
-            <div class="d-flex flex-row align-items-center justify-content-between">
-                <button type="button" class="btn">
-                    <i class="bi bi-list"></i>
+            <div class="d-flex flex-row align-items-center justify-content-between col-md-2">
+                <button type="button" class="btn" (click)="changeView('list')">
+                    <i class="bi bi-list-task fs-2" [ngClass]="{'active': activeView === 'list'}"></i>
                 </button>
-                <button type="button" class="btn">
-                    <i class="bi bi-grid"></i>
+                <button type="button" class="btn" (click)="changeView('grid')">
+                    <i class="bi bi-grid-fill fs-2" [ngClass]="{'active': activeView === 'grid'}"></i>
                 </button>
             </div>
-            <button class="btn btn-primary">Agregar Producto</button>
+            <button class="btn bg-success bg-gradient text-white bg-opacity-75 col-md-6">Agregar Producto</button>
         </div>
     </div>
 </div>
