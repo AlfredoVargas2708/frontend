@@ -15,8 +15,8 @@
                             <img src="https://img.icons8.com/ios-glyphs/60/FFFFFF/new-post.png" alt="Email Icon"
                                 style="width: 20px;">
                         </span>
-                        <input #emailLogin type="email" id="email" formControlName="email" class="form-control border-start-0"
-                            placeholder="tucorreo@ejemplo.com" />
+                        <input #emailLogin type="email" id="email" formControlName="email"
+                            class="form-control border-start-0" placeholder="tucorreo@ejemplo.com" (input)="searchEmail($event)" />
                     </div>
                     <div class="error-message" *ngIf="userForm.get('email')?.errors?.['email']">Ingrese un correo válido
                     </div>
@@ -30,7 +30,7 @@
                             <img src="https://img.icons8.com/ios-filled/50/FFFFFF/password.png" alt="Password Icon"
                                 style="width: 20px;">
                         </span>
-                        <input type="password" id="password" formControlName="password"
+                        <input #passwordLogin type="password" id="password" formControlName="password"
                             class="form-control border-start-0" placeholder="••••••••" />
                     </div>
                     <div class="error-message"
@@ -66,7 +66,8 @@
             <form class="d-flex flex-column gap-3" [formGroup]="signUpForm">
                 <!-- Campos de registro (nombre, email, password, etc.) -->
                 <label for="email">Correo electrónico</label>
-                <input #emailSignUp class="form-control" type="email" placeholder="Correo electrónico" formControlName="email">
+                <input #emailSignUp class="form-control" type="email" placeholder="Correo electrónico"
+                    formControlName="email">
                 <label for="password">Contraseña</label>
                 <input class="form-control" type="password" placeholder="Contraseña" formControlName="password">
                 <label for="role">Rol</label>

@@ -21,6 +21,8 @@ export class LoginComponent implements AfterViewInit {
   }
 
   isFlipped: boolean = false;
+  typingTimer!: ReturnType<typeof setTimeout>;
+  doneTypingInterval: number = 500;
 
   userForm: FormGroup
   signUpForm: FormGroup
@@ -28,6 +30,7 @@ export class LoginComponent implements AfterViewInit {
   @ViewChild('forgotEmailInput') forgotEmailInput!: ElementRef;
   @ViewChild('emailLogin') emailLogin!: ElementRef;
   @ViewChild('emailSignUp') emailSignUp!: ElementRef;
+  @ViewChild('passwordLogin') passwordLogin!: ElementRef;
 
   constructor(private fb: FormBuilder, private emailService: EmailsService, private userService: UsersService, private router: Router) {
     this.userForm = this.fb.group({
@@ -139,6 +142,26 @@ export class LoginComponent implements AfterViewInit {
           })
         }
       })
+    }
+  }
+
+  searchEmail(event: any) {
+    const email = event.target.value;
+    if (email.length > 0) {
+      clearTimeout(this.typingTimer);
+      this.typingTimer = setTimeout(() => {
+        this.userService.checkEmailExists(email).subscribe({
+          next: (exists) => {
+            if (exists) {
+              this.passwordLogin.nativeElement.focus();
+            }
+          },
+          error: (error) => {
+            console.error('Error checking email:', error);
+            this.userForm.get('email')?.setErrors({ 'serverError': true });
+          }
+        });
+      }, this.doneTypingInterval);
     }
   }
 }
