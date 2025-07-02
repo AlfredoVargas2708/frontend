@@ -89,11 +89,7 @@ export class LoginComponent implements AfterViewInit {
             timerProgressBar: true,
             showConfirmButton: false
           }).then(() => {
-            if (response.user.role === 'Admin') {
-              this.router.navigate(['/admin']);
-            } else if (response.user.role === 'Employee') {
-              this.router.navigate(['/employee']);
-            }
+            response.user.is_admin === true ? this.router.navigate(['/admin']) : this.router.navigate(['/employee']);
           })
         },
         error: (error) => {
