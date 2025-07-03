@@ -26,12 +26,14 @@
                     <th class="text-center">Precio</th>
                     <th class="text-center">Cant. Vendida</th>
                     <th class="text-center">Acciones</th>
+                    <th class="text-center">Sitio Web</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let product of products">
                     <td class="d-flex justify-content-center">
-                        <img src="{{ product.product_image }}" alt="{{ product.name }}" class="img-fluid" style="max-width: 60px; max-height: 60px;">
+                        <img src="{{ product.product_image }}" alt="{{ product.name }}" class="img-fluid"
+                            style="max-width: 60px; max-height: 60px;">
                     </td>
                     <td class="text-center">{{ product.product_code ? product.product_code : 'N/A' }}</td>
                     <td class="text-center">{{ product.product_name }}</td>
@@ -41,8 +43,10 @@
                         <div class="d-flex justify-content-center gap-2">
                             <button class="btn btn-sm btn-primary fs-5">Editar</button>
                             <button class="btn btn-sm btn-danger fs-5">Eliminar</button>
-                            <a href="{{ product.product_link }}" target="_blank" class="btn btn-sm btn-info fs-5">Ver</a>
                         </div>
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ product.product_link }}" target="_blank" class="fs-5">Ver</a>
                     </td>
                 </tr>
             </tbody>
