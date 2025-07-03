@@ -23,7 +23,9 @@
         <!-- Encabezado -->
         <div
             class="card-header bg-white d-flex justify-content-between align-items-center rounded-top-4 border-bottom py-3 px-4">
-            <h2 class="mb-0 text-primary fw-bold">Nueva Venta Nº{{ saleForm.get('id')?.value }}</h2>
+            <ng-container *ngIf="saleForm.get('id')?.value;">
+                <h2 class="mb-0 text-primary fw-bold">Nueva Venta Nº{{ saleForm.get('id')?.value }}</h2>
+            </ng-container>
             <span class="text-muted fw-semibold">🗓️ {{ saleForm.get('date')?.value | date:'shortDate' }}</span>
         </div>
 
@@ -34,15 +36,26 @@
                 <div class="col-12 col-md-3 d-flex flex-column gap-2">
                     <label for="code" class="form-label fw-semibold">Código</label>
                     <input #codeInput id="code" class="form-control form-control-lg shadow-sm" formControlName="code"
-                        (input)="getProduct($event)" placeholder="Escanea o escribe el código" />
+                        (input)="getProductByCode($event)" placeholder="Escanea o escribe el código" />
                 </div>
 
                 <!-- Producto -->
-                <div class="col-12 col-md-5 d-flex flex-column gap-2">
+                <div class="col-12 col-md-6 d-flex flex-column gap-2 position-relative">
                     <label for="product" class="form-label fw-semibold">Producto</label>
-                    <input id="product" class="form-control form-control-lg shadow-sm" formControlName="product"
-                        placeholder="Nombre del producto" />
+                    <input #productInput id="product" class="form-control form-control-lg shadow-sm"
+                        formControlName="product" placeholder="Nombre del producto"
+                        (input)="getProductByName($event)" />
+                    <div class="products-list position-absolute top-100 start-0 w-100 bg-white shadow-sm rounded mt-1"
+                        *ngIf="productsNames.length > 0 && !isProductClicked">
+                        <ul class="list-group">
+                            <li *ngFor="let product of productsNames" class="list-group-item"
+                                (mousedown)="selectProduct(product)">
+                                {{ product.product_name }}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
+
 
                 <!-- Precio -->
                 <div class="col-6 col-md-2 d-flex flex-column gap-2">
@@ -52,7 +65,7 @@
                 </div>
 
                 <!-- Cantidad -->
-                <div class="col-6 col-md-2 d-flex flex-column gap-2">
+                <div class="col-6 col-md-1 d-flex flex-column gap-2">
                     <label for="cant" class="form-label fw-semibold">Cantidad</label>
                     <input #cantInput id="cant" class="form-control form-control-lg shadow-sm" formControlName="cant"
                         type="number" (input)="verificarCantidad()" placeholder="0" />

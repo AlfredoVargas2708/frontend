@@ -19,16 +19,18 @@ export class EmployeeComponent implements AfterViewInit, OnInit {
   editProductForm!: FormGroup;
 
   products: any[] = []; // Aquí puedes almacenar los productos si es necesario
+  productsNames: any[] = [];
+  isProductClicked: boolean = false;
 
   @ViewChild('codeInput') codeInput!: ElementRef<HTMLInputElement>;
   @ViewChild('cantInput') cantInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('productInput') productInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     private fb: FormBuilder,
     private productService: ProductsService,
     private salesService: SalesService,
-    private cdf: ChangeDetectorRef) 
-    {
+    private cdf: ChangeDetectorRef) {
     this.productForm = this.fb.group({
       id: [null],
       code: ['', Validators.required],
@@ -68,7 +70,7 @@ export class EmployeeComponent implements AfterViewInit, OnInit {
     setTimeout(() => this.codeInput.nativeElement.focus(), 100);
   }
 
-  getProduct(event: any) {
+  getProductByCode(event: any) {
     const code = event.target.value;
     this.productService.getProduct(code).subscribe({
       next: (data) => {
@@ -87,6 +89,38 @@ export class EmployeeComponent implements AfterViewInit, OnInit {
         console.error('Error fetching product:', err);
       }
     })
+  }
+
+  getProductByName(event: any) {
+    const name = event.target.value;
+    this.isProductClicked = false; // Resetea el estado de clic en producto
+    this.productService.getProductByName(name).subscribe({
+      next: (data) => {
+        this.productsNames = data;
+      },
+      error: (error) => {
+        console.error('Error fetching product by name:', error);
+        this.productsNames = []; // Limpia la lista si hay error
+        this.cdf.markForCheck(); // Asegura que la vista se actualice
+      }
+    })
+  }
+
+  selectProduct(product: any) {
+    console.log('Producto seleccionado:', product);
+    this.productForm.patchValue({
+      id: product.product_id,
+      code: product.product_code,
+      product: product.product_name,
+      price: product.product_price,
+      pesable: product.is_weighable,
+    });
+    setTimeout(() => {
+      this.isProductClicked = true;
+      this.cantInput.nativeElement.focus(); // Enfoca el input de cantidad
+      this.productsNames = []; // Limpia la lista de nombres de productos
+      this.cdf.markForCheck(); // Asegura que la vista se actualice
+    }, 0)
   }
 
   getIdVenta(): Number {
@@ -135,11 +169,8 @@ export class EmployeeComponent implements AfterViewInit, OnInit {
   addProductToSale() {
     const product = this.productForm.value;
 
-    // Evita agregar si el formulario es inválido
-    if (this.productForm.invalid) return;
-
     // Verifica si el producto ya existe en la venta
-    const existingProducts = this.products.find(p => p.code === product.code);
+    const existingProducts = this.products.find(p => p.product_name === product.product);
 
     if (existingProducts) {
       // Si el producto ya existe, actualiza la cantidad
