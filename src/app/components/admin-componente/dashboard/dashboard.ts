@@ -49,13 +49,18 @@ export class Dashboard implements AfterViewInit {
 
   currentYear = new Date().getFullYear();
 
-  firstDayOfYear = new Date(this.currentYear, 0, 1).toISOString().split('T')[0]; // "2024-01-01"
-  lastDayOfYear = new Date(this.currentYear, 11, 31).toISOString().split('T')[0]; // "2024-12-31"
-
+  monthName = new Date().toLocaleString('es-CL', { month: 'long' });
+  capitalizedMonth = this.monthName.charAt(0).toUpperCase() + this.monthName.slice(1);
   constructor(private salesService: SalesService, private productService: ProductsService, private cdr: ChangeDetectorRef) { }
 
   ngAfterViewInit(): void {
-    this.salesService.getSalesByDateRange(this.firstDayOfYear, this.lastDayOfYear).subscribe({
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    const startDate = startOfMonth.toISOString().split('T')[0];
+    const endDate = endOfMonth.toISOString().split('T')[0];
+
+    this.salesService.getSalesByDateRange(startDate, endDate).subscribe({
       next: (data) => {
         this.cantSales = data.length;  // Assuming 'data' is an array of sales
         this.createSalesChart(data);
@@ -72,7 +77,7 @@ export class Dashboard implements AfterViewInit {
         console.error('Error fetching product count:', error);
       }
     })
-    this.salesService.getProductsByDateRange(this.firstDayOfYear, this.lastDayOfYear).subscribe({
+    this.salesService.getProductsByDateRange(startDate, endDate).subscribe({
       next: (data) => {
         this.createProductsChart(data);
       },
@@ -103,7 +108,8 @@ export class Dashboard implements AfterViewInit {
       series: [
         {
           name: "Ventas",
-          data: data.map(sale => sale.total)  // Assuming 'total' is the field for sales amount
+          type: 'line',
+          data: data.map(sale => sale.sales_count)
         }
       ],
       chart: {
@@ -124,7 +130,7 @@ export class Dashboard implements AfterViewInit {
         curve: "smooth" // Estilo de la línea
       },
       title: {
-        text: `Ventas por Mes en el año ${new Date().getFullYear()}`,
+        text: `Ventas por día en el mes de ${this.capitalizedMonth} de ${new Date().getFullYear()}`,
         align: "center",
         style: {
           fontSize: '20px',
@@ -140,11 +146,14 @@ export class Dashboard implements AfterViewInit {
         }
       },
       xaxis: {
-        categories: data.map(sale => sale.mes)
+        title: {
+          text: 'Días del Mes'  // Título del eje X
+        },
+        categories: data.map(sale => sale.sale_date)
       },
       yaxis: {
         title: {
-          text: 'Total Vendido (en CLP)'  // Título del eje Y
+          text: 'Total de Ventas'  // Título del eje Y
         }
       },
       colors: ['#5c9a45'], // Color de la línea
@@ -156,15 +165,16 @@ export class Dashboard implements AfterViewInit {
   }
 
   createProductsChart(data: any[]) {
+    console.log('Products data:', data);
     const productNames = data.map(product => product.product_name);
-    const quantities = data.map(product => product.total_vendido);
+    const quantities = data.map(product => product.total_quantity);
     const colors = this.generateColors(quantities.length);
 
     this.productsChartOptions = {
       series: [
         {
-          name: "Productos",
-          data: quantities
+          name: "Cantidad Vendida",
+          data: quantities,
         }
       ],
       chart: {
@@ -177,9 +187,10 @@ export class Dashboard implements AfterViewInit {
       },
       plotOptions: {
         bar: {
-          distributed: true, // Permite colores diferentes por barra
-          horizontal: false, // Cambia a true si quieres barras horizontales
-          columnWidth: "50%" // Ancho de las barras
+          horizontal: false, // Barra vertical
+          columnWidth: '55%', // Ancho de las barras
+          borderRadius: 5, // Bordes redondeados
+          distributed: true, // Colores diferentes por barra
         }
       },
       colors: colors, // Se aplican por barra
@@ -193,17 +204,20 @@ export class Dashboard implements AfterViewInit {
       },
       xaxis: {
         categories: productNames,
+        title:{
+          text: 'Productos'  // Título del eje X
+        },
         labels: {
           rotate: -45
         }
       },
       yaxis: {
         title: {
-          text: 'Cantidad'  // Título del eje Y
+          text: 'Cantidad de Productos Vendidos'  // Título del eje Y
         }
       },
       title: {
-        text: `Productos Vendidos en ${this.currentYear}`,
+        text: `Productos Vendidos en el mes de ${this.capitalizedMonth} de ${new Date().getFullYear()}`,
         align: "center",
         style: {
           fontSize: '20px',
