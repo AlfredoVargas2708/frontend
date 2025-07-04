@@ -178,7 +178,7 @@ export class Dashboard implements AfterViewInit {
         }
       ],
       chart: {
-        height: 400,
+        height: 350,
         type: "bar",
         toolbar: { show: false },
       },
