@@ -17,15 +17,20 @@
             </div>
             <div class="flex-column align-items-center col-md-8 mb-3 gap-2"
                 [ngStyle]="{'display': selectedFilter === 'fecha' ? 'flex': 'none'}">
-                <label for="dateRange" class="form-label fw-bold">Rango de fechas:</label>
-                <div class="d-flex align-items-center gap-2 w-100">
-                    <div class="col-md-6">
-                        <input type="date" class="form-control form-control-lg shadow-sm" id="dateRange"
-                            name="dateRange" placeholder="Selecciona un rango de fechas">
-                    </div>
-                    <div class="col-md-6">
-                        <input type="date" class="form-control form-control-lg shadow-sm" id="dateRange"
-                            name="dateRange" placeholder="Selecciona un rango de fechas">
+                <label class="form-label fw-bold">Rango de fechas:</label>
+                <div class="d-flex align-items-center gap-2 col-md-12">
+                    <form [formGroup]="dateForm" class="col-md-10 d-flex gap-2">
+                        <div class="col-md-6">
+                            <input type="date" class="form-control form-control-lg shadow-sm" id="startDate"
+                                formControlName="startDate" placeholder="Selecciona una fecha de inicio">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="date" class="form-control form-control-lg shadow-sm" id="endDate"
+                                formControlName="endDate" placeholder="Selecciona una fecha de fin">
+                        </div>
+                    </form>
+                    <div class="col-md-2 d-flex justify-content-end">
+                        <button class="btn btn-primary btn-lg shadow-sm" (click)="createDateChart()">Aplicar</button>
                     </div>
                 </div>
             </div>
@@ -38,11 +43,69 @@
                         value="{{ selectedProduct }}">
                     <div *ngIf="filteredProducts.length > 0" class="suggestions">
                         <ul class="list-group">
-                            <li *ngFor="let product of filteredProducts" class="list-group-item" (mousedown)="selectProduct(product.product_name)">{{ product.product_name }}</li>
+                            <li *ngFor="let product of filteredProducts" class="list-group-item"
+                                (mousedown)="selectProduct(product.product_name)">{{ product.product_name }}</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="sales-charts">
+        <ng-container *ngIf="dateChartOptions">
+            <apx-chart [series]="dateChartOptions.series" [chart]="dateChartOptions.chart"
+                [xaxis]="dateChartOptions.xaxis" [dataLabels]="dateChartOptions.dataLabels"
+                [stroke]="dateChartOptions.stroke"></apx-chart>
+            <div class="d-flex flex-column gap-2 mt-2">
+                <h3>Tabla de Ventas</h3>
+                <div class="table-responsive">
+                    <table class="table table-separate table-striped table-bordered table-hover">
+                        <thead class="table-success">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Total Vendido</th>
+                                <th>Productos Vendidos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let sale of dateSales; let i = index">
+                                <!-- Fila principal -->
+                                <tr (click)="toggleExpand(i)" style="cursor: pointer">
+                                    <td>{{ sale.sale_day | date: 'shortDate' }}</td>
+                                    <td>{{ sale.total_vendido_dia | currency: 'CLP' }}</td>
+                                    <td>{{ sale.products.length }}</td>
+                                </tr>
+
+                                <!-- Fila expandida -->
+                                <tr *ngIf="expandedIndex === i">
+                                    <td colspan="3">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-sm mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Producto</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Precio Unitario</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let product of sale.products">
+                                                        <td>{{ product.product_name }}</td>
+                                                        <td>{{ product.total_quantity }}</td>
+                                                        <td>{{ product.unit_price | currency: 'CLP' }}</td>
+                                                        <td>{{ product.total_amount | currency: 'CLP' }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </ng-container>
     </div>
 </div>
