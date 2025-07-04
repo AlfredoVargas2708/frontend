@@ -1,1 +1,48 @@
-<p>sales works!</p>
+<div class="container-fluid mt-4">
+    <div class="sales-header">
+        <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-graph-up fs-2 text-success"></i>
+            <h1>Ventas</h1>
+        </div>
+        <div class="row mt-4 gap-5">
+            <div class="d-flex flex-column col-md-3 mb-3 gap-2">
+                <label for="filterSelect" class="form-label fw-bold">Filtrar por:</label>
+                <select class="form-select form-select-lg shadow-sm" id="filterSelect" name="filterSelect"
+                    aria-label="Selector de filtro" (change)="changeFilter($event)">
+                    <option value="" disabled selected>Seleccione una opción</option>
+                    <option *ngFor="let option of filterOptions" [value]="option.value">
+                        {{ option.label }}
+                    </option>
+                </select>
+            </div>
+            <div class="flex-column align-items-center col-md-8 mb-3 gap-2"
+                [ngStyle]="{'display': selectedFilter === 'fecha' ? 'flex': 'none'}">
+                <label for="dateRange" class="form-label fw-bold">Rango de fechas:</label>
+                <div class="d-flex align-items-center gap-2 w-100">
+                    <div class="col-md-6">
+                        <input type="date" class="form-control form-control-lg shadow-sm" id="dateRange"
+                            name="dateRange" placeholder="Selecciona un rango de fechas">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="date" class="form-control form-control-lg shadow-sm" id="dateRange"
+                            name="dateRange" placeholder="Selecciona un rango de fechas">
+                    </div>
+                </div>
+            </div>
+            <div class="flex-column align-items-center col-md-8 mb-3 gap-2"
+                [ngStyle]="{'display': selectedFilter === 'producto' ? 'flex' : 'none'}">
+                <label for="productSelect" class="form-label fw-bold">Ingresar producto:</label>
+                <div class="col-md-12">
+                    <input type="text" class="form-control form-control-lg shadow-sm" id="productSelect"
+                        name="productSelect" placeholder="Ingresa un producto" (input)="searchProducts($event)"
+                        value="{{ selectedProduct }}">
+                    <div *ngIf="filteredProducts.length > 0" class="suggestions">
+                        <ul class="list-group">
+                            <li *ngFor="let product of filteredProducts" class="list-group-item" (mousedown)="selectProduct(product.product_name)">{{ product.product_name }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
