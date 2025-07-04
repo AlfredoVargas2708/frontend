@@ -178,7 +178,7 @@ export class Dashboard implements AfterViewInit {
         }
       ],
       chart: {
-        height: 350,
+        height: 400,
         type: "bar",
         toolbar: { show: false },
       },
@@ -188,7 +188,7 @@ export class Dashboard implements AfterViewInit {
       plotOptions: {
         bar: {
           horizontal: false, // Barra vertical
-          columnWidth: '55%', // Ancho de las barras
+          columnWidth: '30%', // Ancho de las barras
           borderRadius: 5, // Bordes redondeados
           distributed: true, // Colores diferentes por barra
         }
@@ -208,7 +208,7 @@ export class Dashboard implements AfterViewInit {
           text: 'Productos'  // Título del eje X
         },
         labels: {
-          rotate: -45
+          show: false,
         }
       },
       yaxis: {
