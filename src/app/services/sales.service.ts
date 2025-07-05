@@ -14,19 +14,15 @@ export class SalesService {
     return this.http.get<number>(`${environment.apiUrl}/sales/count`);
   }
 
-  getSalesByDateRange(startDate: string, endDate: string): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiUrl}/sales?startDate=${startDate}&endDate=${endDate}`);
-  }
-
-  getSalesBetweenDates(startDate: string, endDate: string): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiUrl}/sales/between?startDate=${startDate}&endDate=${endDate}`);
-  }
-
-  getProductsByDateRange(startDate: string, endDate: string): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiUrl}/sales/products?startDate=${startDate}&endDate=${endDate}`);
-  }
-
   createSale(sale: any, products: any[]): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/sales`, { sale, products });
+  }
+
+  getSalesInTheMonth(fecha: Date): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/sales?month=${fecha.getMonth() + 1}&year=${fecha.getFullYear()}`);
+  }
+
+  getProductsSalesInTheMonth(fecha: Date): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/sales/products?month=${fecha.getMonth() + 1}&year=${fecha.getFullYear()}`);
   }
 }
