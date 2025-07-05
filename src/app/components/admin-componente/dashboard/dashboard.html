@@ -1,42 +1,49 @@
 <div class="container-fluid mt-4">
-    <div class="row">
-        <div class="col-md-6">
-            <ng-container *ngIf="salesChartOptions">
-                <apx-chart [series]="salesChartOptions.series" [chart]="salesChartOptions.chart"
-                    [xaxis]="salesChartOptions.xaxis" [dataLabels]="salesChartOptions.dataLabels"
-                    [grid]="salesChartOptions.grid" [stroke]="salesChartOptions.stroke"
-                    [title]="salesChartOptions.title" [colors]="salesChartOptions.colors"
-                    [yaxis]="salesChartOptions.yaxis"></apx-chart>
-            </ng-container>
-        </div>
-        <div class="col-md-6">
-            <ng-container *ngIf="cantSalesChartOptions">
+    <div class="row" *ngIf="!isLoading">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <ng-container *ngIf="salesChartOptions">
+                    <apx-chart [series]="salesChartOptions.series" [chart]="salesChartOptions.chart"
+                        [xaxis]="salesChartOptions.xaxis" [dataLabels]="salesChartOptions.dataLabels"
+                        [grid]="salesChartOptions.grid" [stroke]="salesChartOptions.stroke"
+                        [title]="salesChartOptions.title" [colors]="salesChartOptions.colors"
+                        [yaxis]="salesChartOptions.yaxis" [legend]="salesChartOptions.legend"></apx-chart>
+                </ng-container>
+            </div>
+            <div class="col-md-6">
                 <apx-chart [series]="cantSalesChartOptions.series" [chart]="cantSalesChartOptions.chart"
                     [xaxis]="cantSalesChartOptions.xaxis" [dataLabels]="cantSalesChartOptions.dataLabels"
                     [grid]="cantSalesChartOptions.grid" [stroke]="cantSalesChartOptions.stroke"
                     [title]="cantSalesChartOptions.title" [colors]="cantSalesChartOptions.colors"
-                    [yaxis]="cantSalesChartOptions.yaxis"></apx-chart>
-            </ng-container>
+                    [yaxis]="cantSalesChartOptions.yaxis" [plotOptions]="cantSalesChartOptions.plotOptions"
+                    [legend]="cantSalesChartOptions.legend"></apx-chart>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <ng-container *ngIf="productsChartOptions">
+                    <apx-chart [series]="productsChartOptions.series" [chart]="productsChartOptions.chart"
+                        [xaxis]="productsChartOptions.xaxis" [dataLabels]="productsChartOptions.dataLabels"
+                        [grid]="productsChartOptions.grid" [stroke]="productsChartOptions.stroke"
+                        [title]="productsChartOptions.title" [colors]="productsChartOptions.colors"
+                        [yaxis]="productsChartOptions.yaxis" [plotOptions]="productsChartOptions.plotOptions"
+                        [legend]="productsChartOptions.legend"></apx-chart>
+                </ng-container>
+            </div>
+            <div class="col-md-6">
+                <ng-container *ngIf="productsOrdersChartOptions">
+                    <apx-chart [series]="productsOrdersChartOptions.series" [chart]="productsOrdersChartOptions.chart"
+                        [xaxis]="productsOrdersChartOptions.xaxis" [dataLabels]="productsOrdersChartOptions.dataLabels"
+                        [grid]="productsOrdersChartOptions.grid" [stroke]="productsOrdersChartOptions.stroke"
+                        [title]="productsOrdersChartOptions.title" [colors]="productsOrdersChartOptions.colors"
+                        [yaxis]="productsOrdersChartOptions.yaxis"
+                        [plotOptions]="productsOrdersChartOptions.plotOptions"
+                        [legend]="productsOrdersChartOptions.legend"></apx-chart>
+                </ng-container>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-6">
-            <ng-container *ngIf="productsChartOptions">
-                <apx-chart [series]="productsChartOptions.series" [chart]="productsChartOptions.chart"
-                    [xaxis]="productsChartOptions.xaxis" [dataLabels]="productsChartOptions.dataLabels"
-                    [grid]="productsChartOptions.grid" [stroke]="productsChartOptions.stroke"
-                    [title]="productsChartOptions.title" [colors]="productsChartOptions.colors"
-                    [yaxis]="productsChartOptions.yaxis"></apx-chart>
-            </ng-container>
-        </div>
-        <div class="col-md-6">
-            <ng-container *ngIf="productsOrdersChartOptions">
-                <apx-chart [series]="productsOrdersChartOptions.series" [chart]="productsOrdersChartOptions.chart"
-                    [xaxis]="productsOrdersChartOptions.xaxis" [dataLabels]="productsOrdersChartOptions.dataLabels"
-                    [grid]="productsOrdersChartOptions.grid" [stroke]="productsOrdersChartOptions.stroke"
-                    [title]="productsOrdersChartOptions.title" [colors]="productsOrdersChartOptions.colors"
-                    [yaxis]="productsOrdersChartOptions.yaxis"></apx-chart>
-            </ng-container>
-        </div>
+    <div class="loading-container" *ngIf="isLoading">
+        <div class="loader"></div>
     </div>
 </div>

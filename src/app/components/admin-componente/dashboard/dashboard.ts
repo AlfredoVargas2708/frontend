@@ -25,9 +25,9 @@ export type ChartOptions = {
   stroke: ApexStroke;
   title: ApexTitleSubtitle;
   colors: String[];
-  plotOptions?: ApexPlotOptions;
+  plotOptions: ApexPlotOptions;
   markers?: ApexMarkers;
-  legend?: {
+  legend: {
     show: boolean;
   },
   yaxis: ApexYAxis;
@@ -41,6 +41,7 @@ export type ChartOptions = {
   styleUrl: './dashboard.scss'
 })
 export class Dashboard implements OnInit {
+  isLoading: boolean = true;
 
   salesChartOptions!: ChartOptions;
   cantSalesChartOptions!: ChartOptions;
@@ -52,10 +53,23 @@ export class Dashboard implements OnInit {
 
   constructor(
     private salesService: SalesService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     this.loadChartData();
+  }
+
+  getRandomColors(length: number): string[] {
+    const colors = [];
+    for (let i = 0; i < length; i++) {
+      // Genera tonos de verde variando el canal HSL
+      const hue = 120; // 120 es verde en HSL
+      const saturation = 60 + Math.floor((i / length) * 30); // 60% a 90%
+      const lightness = 40 + Math.floor((i / length) * 30); // 40% a 70%
+      colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+    }
+    return colors;
   }
 
   loadChartData() {
@@ -73,6 +87,12 @@ export class Dashboard implements OnInit {
             height: 350,
             toolbar: {
               show: false
+            }
+          },
+          plotOptions: {
+            bar: {
+              columnWidth: '50%',
+              distributed: true
             }
           },
           xaxis: {
@@ -98,13 +118,18 @@ export class Dashboard implements OnInit {
             text: "Ganancias por día durante el mes",
             align: "center"
           },
-          colors: ["#FF1654"],
+          colors: ["#198754"],
           yaxis: {
             title: {
               text: "Ventas (en CLP)"
             }
+          },
+          legend: {
+            show: false
           }
         };
+        const salesColors = this.getRandomColors(data.length);
+        const productsColors = this.getRandomColors(data.reduce((acc: number, sale: any) => acc + sale.products.length, 0));
         this.cantSalesChartOptions = {
           series: [
             {
@@ -117,7 +142,7 @@ export class Dashboard implements OnInit {
             height: 350,
             toolbar: {
               show: false
-            }
+            },
           },
           xaxis: {
             categories: data.map((sale: any) => new Date(sale.sale_day).toLocaleDateString('en-US', {
@@ -138,15 +163,24 @@ export class Dashboard implements OnInit {
           stroke: {
             curve: "smooth"
           },
+          plotOptions: {
+            bar: {
+              columnWidth: '50%',
+              distributed: true
+            }
+          },
           title: {
             text: "Cantidad de ventas por día durante el mes",
             align: "center"
           },
-          colors: ["#00E396"],
+          colors: salesColors,
           yaxis: {
             title: {
               text: "Cantidad de ventas"
             }
+          },
+          legend: {
+            show: false
           }
         };
         this.productsChartOptions = {
@@ -173,6 +207,12 @@ export class Dashboard implements OnInit {
               text: "Fecha de venta"
             }
           },
+          plotOptions: {
+            bar: {
+              columnWidth: '50%',
+              distributed: true
+            }
+          },
           dataLabels: {
             enabled: false
           },
@@ -183,14 +223,17 @@ export class Dashboard implements OnInit {
             curve: "smooth"
           },
           title: {
-            text: "Cantidad de productos vendidos por día durante el mes",
+            text: "Cantidad total de productos vendidos por día durante el mes",
             align: "center"
           },
-          colors: ["#00E396"],
+          colors: productsColors,
           yaxis: {
             title: {
               text: "Cantidad de productos"
             }
+          },
+          legend: {
+            show: false
           }
         };
       },
@@ -200,7 +243,7 @@ export class Dashboard implements OnInit {
     })
     this.salesService.getProductsSalesInTheMonth(this.actualDate).subscribe({
       next: (data) => {
-        console.log('Product sales data:', data);
+        const productsColors = this.getRandomColors(data.length);
         this.productsOrdersChartOptions = {
           series: [
             {
@@ -224,6 +267,15 @@ export class Dashboard implements OnInit {
               show: false
             }
           },
+          plotOptions: {
+            bar: {
+              distributed: true,
+              columnWidth: '50%',
+            }
+          },
+          legend: {
+            show: false
+          },
           dataLabels: {
             enabled: false
           },
@@ -237,7 +289,7 @@ export class Dashboard implements OnInit {
             text: "Cantidad de productos vendidos durante el mes",
             align: "center"
           },
-          colors: ["#008FFB"],
+          colors: productsColors,
           yaxis: {
             title: {
               text: "Cantidad de productos"
@@ -249,5 +301,9 @@ export class Dashboard implements OnInit {
         console.error('Error fetching product sales data:', error);
       }
     })
+    setTimeout(() => {
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    }, 1000)
   }
 }
